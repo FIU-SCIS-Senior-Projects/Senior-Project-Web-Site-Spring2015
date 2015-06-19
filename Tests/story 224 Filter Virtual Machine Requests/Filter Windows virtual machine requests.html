@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://spws-dev.cis.fiu.edu/Senior-Project-Web-Site-Ver-5/admin/admin_dashboard" />
+<title>Filter Windows virtual machine requests</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Filter Windows virtual machine requests</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>http://spws-dev.cis.fiu.edu/Senior-Project-Web-Site-Ver-5/admin/admin_dashboard</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=VM Requests</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>300</td>
+	<td></td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>${KEY_ENTER}</td>
+	<td>KEY_ENTER</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=image</td>
+	<td>win${KEY_ENTER}</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>300</td>
+	<td></td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=f_ram</td>
+	<td>1${KEY_ENTER}</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>300</td>
+	<td></td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=storage</td>
+	<td>1${KEY_ENTER}</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>300</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectAndWait</td>
+	<td>id=status</td>
+	<td>label=PENDING</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=f_qty</td>
+	<td>1${KEY_ENTER}</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>300</td>
+	<td></td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=name</td>
+	<td>yam${KEY_ENTER}</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>300</td>
+	<td></td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=term</td>
+	<td>spring 2015${KEY_ENTER}</td>
+</tr>
+</tbody></table>
+</body>
+</html>

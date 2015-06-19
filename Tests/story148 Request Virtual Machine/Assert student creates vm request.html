@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://spws-dev.cis.fiu.edu/Senior-Project-Web-Site-Ver-5/admin/admin_dashboard" />
+<title>Assert student creates vm request</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Assert student creates vm request</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>http://spws-dev.cis.fiu.edu/Senior-Project-Web-Site-Ver-5/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=My Project</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>id=submitRequests</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>300</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=ram</td>
+	<td>10w4</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=submitRequests</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertAlert</td>
+	<td>RAM value: 10w4 must be numeric and greater than zero</td>
+	<td></td>
+</tr>
+<tr>
+	<td>store</td>
+	<td>${KEY_BACKSPACE}</td>
+	<td>KEY_BACKSPACE</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=ram</td>
+	<td>${KEY_BACKSPACE}</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=ram</td>
+	<td>${KEY_BACKSPACE}</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=ram</td>
+	<td>${KEY_BACKSPACE}</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=ram</td>
+	<td>${KEY_BACKSPACE}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=ram</td>
+	<td>1024</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>300</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=hdd</td>
+	<td>409t</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=submitRequests</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertAlert</td>
+	<td>Storage value: 409t must be numeric and greater than zero</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>300</td>
+	<td></td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=hdd</td>
+	<td>${KEY_BACKSPACE}</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=hdd</td>
+	<td>${KEY_BACKSPACE}</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=hdd</td>
+	<td>${KEY_BACKSPACE}</td>
+</tr>
+<tr>
+	<td>sendKeys</td>
+	<td>id=hdd</td>
+	<td>${KEY_BACKSPACE}</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=hdd</td>
+	<td>4096</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=qty</td>
+	<td>2</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=submitRequests</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
