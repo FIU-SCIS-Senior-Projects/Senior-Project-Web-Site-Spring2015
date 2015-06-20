@@ -49,14 +49,238 @@ class SPW_User_Model extends CI_Model
     }
     
     /*added in SPW v5to filter users*/
-    public function searchFilteredUsers($where){
+    public function searchFilteredUsers($where, $rank){
         if($where == ""){
-            $query = "SELECT id, first_name, last_name, email, picture, role, status, hash_pwd "
-                ."FROM spw_user ";
+            $query = "SELECT spw_user.id, first_name, last_name, email, picture, role, spw_user.status, hash_pwd, headline_linkedIn, 
+									spw_experience.title AS experience, spw_skill_user.skill, COUNT(spw_rank_user.project) AS rank "
+                            . "FROM spw_user "
+							. "LEFT JOIN spw_experience "
+							. "ON spw_user.id=spw_experience.user "
+							. "LEFT JOIN spw_skill_user "
+							. "ON spw_user.id=spw_skill_user.user "
+							. "LEFT JOIN spw_rank_user "
+							. "ON spw_user.id=spw_rank_user.user "
+							. "LEFT JOIN spw_project "
+							. "ON spw_rank_user.project=spw_project.id "
+							. "GROUP BY spw_user.id ";
         }else{
-        $query = "SELECT id, first_name, last_name, email, picture, role, status, hash_pwd "
-                ."FROM spw_user "
-                . "WHERE ".$where." ";
+			$query = "SELECT spw_user.id, first_name, last_name, email, picture, role, spw_user.status, hash_pwd, headline_linkedIn, 
+									spw_experience.title AS experience, spw_skill_user.skill, COUNT(spw_rank_user.project) AS rank "
+                            . "FROM spw_user "
+							. "LEFT JOIN spw_experience "
+							. "ON spw_user.id=spw_experience.user "
+							. "LEFT JOIN spw_skill_user "
+							. "ON spw_user.id=spw_skill_user.user "
+							. "LEFT JOIN spw_rank_user "
+							. "ON spw_user.id=spw_rank_user.user "
+							. "LEFT JOIN spw_project "
+							. "ON spw_rank_user.project=spw_project.id "
+							. "WHERE ".$where." "
+							. "GROUP BY spw_user.id ";
+        }
+		
+		/*get a unique query to find users who ranked projects with APPROVED in them.
+		  If this is query not done, users who did not rank any projects will be left out of the filter.*/
+		$queryRank = "SELECT spw_user.id, first_name, last_name, COUNT(spw_rank_user.project) AS rank "
+							. "FROM spw_user " 
+							. "LEFT JOIN spw_rank_user "
+							. "ON spw_user.id=spw_rank_user.user "
+							. "LEFT JOIN spw_project "
+							. "ON spw_rank_user.project=spw_project.id "
+							. "WHERE spw_project.status='APPROVED' "
+							. "GROUP BY spw_user.id ";
+		
+		$min = $this->spw_match_model->getMinimum();
+		$q = $this->db->query($query);
+		
+		if($rank == 'YES'){
+			$queryRank .= "HAVING rank >= $min ";
+			$q2 = $this->db->query($queryRank);
+			$results = array();
+			if($q->num_rows() > 0)
+				foreach ($q->result() as $row):
+					$userFound = false;
+					foreach($q2->result() as $rankRow):
+						if($rankRow->id == $row->id){
+							$userFound = true;
+							if($rankRow->rank >= $min){
+								$row->rank = $rankRow->rank;
+								array_push($results,$row);
+							}
+						}
+					endforeach;
+				endforeach;
+		}
+		elseif($rank == 'NO'){
+			$q2 = $this->db->query($queryRank);
+			$results = array();
+			if($q->num_rows() > 0)
+				foreach ($q->result() as $row):
+					$userFound = false;
+					foreach($q2->result() as $rankRow):
+						if($rankRow->id == $row->id){
+							$userFound = true;
+							$row->rank = $rankRow->rank;
+							if($rankRow->rank < $min){
+								$row->rank = $rankRow->rank;
+								array_push($results,$row);
+							}
+						}
+					endforeach;
+					if($userFound == false){
+						$row->rank = 0;
+						array_push($results,$row);
+					}
+				endforeach;
+		}
+		else{
+			$q2 = $this->db->query($queryRank);
+			$results = array();
+			if($q->num_rows() > 0)
+					foreach ($q->result() as $row):
+						$userFound = false;
+						foreach($q2->result() as $rankRow):
+							if($rankRow->id == $row->id){
+								$userFound = true;
+								$row->rank = $rankRow->rank;
+								array_push($results,$row);
+							}
+						endforeach;
+						if($userFound == false){
+							$row->rank = 0;
+							array_push($results,$row);
+						}
+					endforeach;
+		}
+		
+		return $results;
+		
+		/*if($rank == 'YES'){
+			$q2 = $this->db->query($queryRank);
+			$results = array();
+        
+			if($q->num_rows() > 0)
+					foreach ($q->result() as $row):
+						$userFound = false;
+						foreach($q2->result() as $rankRow):
+							if($rankRow->id == $row->id){
+								$userFound = true;
+								$row->rank = $rankRow->rank;
+								if($rank == 'YES'){
+									if($row->rank >= $min){
+										array_push($results,$row);
+									}
+								}
+								elseif($rank == 'NO'){
+									if($row->rank < $min){
+										array_push($results,$row);
+									}
+								}
+								else{
+									array_push($results,$row);
+								}
+							}
+						endforeach;
+						if($userFound == false){
+							$row->rank = 0;
+							array_push($results,$row);
+						}
+						//$userFound = false;
+					endforeach;
+		
+			return $results;
+		}*/
+		/*$q = $this->db->query($query);
+		$results = array();
+		
+		if($q->num_rows() > 0)
+			foreach ($q->result() as $row)
+				array_push($results,$row);
+				
+		return $results;*/
+		
+        
+    }
+	/*
+	Query for user minimum ranked projects
+		SELECT spw_user.id, first_name, last_name, COUNT(spw_rank_user.project) AS rank
+		FROM spw_user 
+		LEFT JOIN spw_rank_user
+		ON spw_user.id=spw_rank_user.user 
+		LEFT JOIN spw_project 
+		ON spw_rank_user.project=spw_project.id
+		WHERE spw_project.status='APPROVED'
+		GROUP BY spw_user.id
+	*/
+    
+    /*added in SPW v5. to retrieve all users*/
+    public function getAllUsers(){
+		
+        $q = $this->db->query("SELECT spw_user.id, first_name, last_name, email, picture, role, spw_user.status, hash_pwd, headline_linkedIn, 
+									spw_experience.title AS experience, spw_skill_user.skill  "
+                            . "FROM spw_user "
+							. "LEFT JOIN spw_experience "
+							. "ON spw_user.id=spw_experience.user "
+							. "LEFT JOIN spw_skill_user "
+							. "ON spw_user.id=spw_skill_user.user "
+							. "LEFT JOIN spw_rank_user "
+							. "ON spw_user.id=spw_rank_user.user "
+							. "GROUP BY spw_user.id ");
+							
+		$q2 = $this->db->query("SELECT spw_user.id, first_name, last_name, COUNT(spw_rank_user.project) AS rank "
+							. "FROM spw_user " 
+							. "LEFT JOIN spw_rank_user "
+							. "ON spw_user.id=spw_rank_user.user "
+							. "LEFT JOIN spw_project "
+							. "ON spw_rank_user.project=spw_project.id "
+							. "WHERE spw_project.status='APPROVED' "
+							. "GROUP BY spw_user.id ");
+			
+        //$requests = array();
+        //if($q->num_rows() > 0)
+        //    foreach ($q->result() as $row)
+        //        array_push($requests,$row);
+			$requests = array();
+        
+			if($q->num_rows() > 0)
+					foreach ($q->result() as $row):
+						$userFound = false;
+						foreach($q2->result() as $rankRow):
+							if($rankRow->id == $row->id){
+								$userFound = true;
+								$row->rank = $rankRow->rank;
+								array_push($requests,$row);
+							}
+						endforeach;
+						if(!($userFound)){
+							$row->rank = 0;
+							array_push($requests,$row);
+						}
+					endforeach;
+			return $requests;
+    }
+	
+	/*added in SPW v6 to filter users by ranked projects*/
+    /*public function searchFilteredUserRanks($having){
+        if($having == ""){
+            $query = "SELECT spw_user.id, first_name, last_name, COUNT(spw_rank_user.project) AS rank "
+							. "FROM spw_user " 
+							. "LEFT JOIN spw_rank_user "
+							. "ON spw_user.id=spw_rank_user.user "
+							. "LEFT JOIN spw_project "
+							. "ON spw_rank_user.project=spw_project.id "
+							. "WHERE spw_project.status='APPROVED' "
+							. "GROUP BY spw_user.id ";
+        }else{
+			$query = "SELECT spw_user.id, first_name, last_name, COUNT(spw_rank_user.project) AS rank "
+							. "FROM spw_user " 
+							. "LEFT JOIN spw_rank_user "
+							. "ON spw_user.id=spw_rank_user.user "
+							. "LEFT JOIN spw_project "
+							. "ON spw_rank_user.project=spw_project.id "
+							. "WHERE spw_project.status='APPROVED' "
+							. "GROUP BY spw_user.id "
+							. "HAVING ".$having." ";
         }
         $q = $this->db->query($query);
         
@@ -69,18 +293,27 @@ class SPW_User_Model extends CI_Model
         return $results;
         
     }
-    
-    /*added in SPW v5. to retrive all users*/
-    public function getAllUsers(){
-        
-        $q = $this->db->query("SELECT id, first_name, last_name, email, picture, role, status, hash_pwd "
-                            . "FROM spw_user ");
-        $requests = array();
+	//added in SPW v6 to get all user number of ranked projects
+	//This contains an auxiliary query for specifically counting APPROVED projects that users ranked
+	public function getAllUserRanks(){
+		$q = $this->db->query("SELECT spw_user.id, first_name, last_name, COUNT(spw_rank_user.project) AS rank "
+							. "FROM spw_user " 
+							. "LEFT JOIN spw_rank_user "
+							. "ON spw_user.id=spw_rank_user.user "
+							. "LEFT JOIN spw_project "
+							. "ON spw_rank_user.project=spw_project.id "
+							. "WHERE spw_project.status='APPROVED' "
+							. "GROUP BY spw_user.id");
+							
+		$requests = array();
+		
         if($q->num_rows() > 0)
             foreach ($q->result() as $row)
                 array_push($requests,$row);
+		
         return $requests;
-    }
+	}*/
+	
     /*added in SPW v5 to update user*/
     public function updateUsers($requests){
         /* for each request update its settings */

@@ -10,14 +10,16 @@
 
 <table class="table table-bordered" id="machines_table">
     <thead>
+		<tr></tr>
         <tr>
             <!-- Filters -->
             <th></th>
+            <th></th>
             <th>
-                <input id="fn" class="input-medium text-filter" type="text" value="<?php echo $fn ?>">
+                <input id="fn" class="input-small text-filter" type="text" value="<?php echo $fn ?>">
             </th>
             <th>
-                <input id="ln" class="input-medium text-filter" type="text" value="<?php echo $ln ?>">
+                <input id="ln" class="input-small text-filter" type="text" value="<?php echo $ln ?>">
             </th>
             <th>
                 <input id="email" class="input-medium text-filter" type="text" value="<?php echo $email ?>">
@@ -38,28 +40,49 @@
                   <?php echo '<option '.($status==='ACTIVE'?'selected="selected"':'').' value="ACTIVE">ACTIVE</option>'; ?>
                 </select>
             </th>
-            <th></th>
+			<th>
+				<select class="field-custom dropdown" id="linkedIn">
+				  <?php echo '<option '.($linkedIn==='ALL'?'selected="selected"':'').' value="ALL">ALL</option>'; ?>
+                  <?php echo '<option '.($linkedIn==='YES'?'selected="selected"':'').' value="YES">YES</option>'; ?>
+                  <?php echo '<option '.($linkedIn==='NO'?'selected="selected"':'').' value="NO">NO</option>'; ?>
+                  <?php echo '<option '.($linkedIn==='No Picture'?'selected="selected"':'').' value="No Picture">No Picture</option>'; ?>
+                  <?php echo '<option '.($linkedIn==='No LinkedIn'?'selected="selected"':'').' value="No LinkedIn">No LinkedIn</option>'; ?>
+                  <?php echo '<option '.($linkedIn==='No Experience'?'selected="selected"':'').' value="No Experience">No Experience</option>'; ?>
+                  <?php echo '<option '.($linkedIn==='No Skills'?'selected="selected"':'').' value="No Skills">No Skills</option>'; ?>
+                </select>
+			</th>
+            <th>
+				<select class="field-custom dropdown" id="rank">
+				  <?php echo '<option '.($rank==='ALL'?'selected="selected"':'').' value="ALL">ALL</option>'; ?>
+                  <?php echo '<option '.($rank==='YES'?'selected="selected"':'').' value="YES">YES</option>'; ?>
+                  <?php echo '<option '.($rank==='NO'?'selected="selected"':'').' value="NO">NO</option>'; ?>
+			</th>
+			<th></th>
             <!-- end filters -->
         </tr>
         <tr>
             <th style="display:none;">Id No.</th>
+            <th> <input name="selectall" type="checkbox" id="selectall" class="selectall" /> <div id="checkBoxList"> </th>
             <th>Picture</th>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
             <th>Role</th>
             <th>Status</th>
+			<th>LinkedIn</th>
+			<th>Ranks</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         <?php foreach($requests as $request):?>
-        <tr>
+        <tr class="rows" id="userRow_<?php echo $request->id ?>" onClick="specialCase(<?php echo $request->id ?>)">
             <td style="display:none;">
-                <select class="field-custom" name="id">
+                <select id="idRow_<?php echo $request->id ?>" class="field-custom idRow" name="id">
                     <?php echo '<option>'.$request->id.'</option>'?>
                 </select>
             </td>
+            <td><?php echo " <input class=\"checkbox\" type=\"checkbox\" name=\"userRows\" id=\"userCheck_".$request->id."\" /> " ?> </td>
             <td>
                 <div>
                     <a onclick="return emulateUser(<?php echo '\''.$request->email.'\',\''.$request->hash_pwd.'\',\''.$request->role.'\','.$request->id ?>);" href="" data-toggle="tooltip" title="Act as User">
@@ -68,16 +91,16 @@
                 </div>
             </td>
             <td>
-                <input id="col_1" name="col_1" class="input-medium mg-top-20" type="text" value="<?php echo $request->first_name ?>">
+                <input id="col_1" name="col_1" class="input-small mg-top-20 inputText" type="text" value="<?php echo $request->first_name ?>">
             </td>
             <td>
-                <input id="col_2" name="col_2" class="input-medium mg-top-20" type="text" value="<?php echo $request->last_name ?>">
+                <input id="col_2" name="col_2" class="input-small mg-top-20 inputText" type="text" value="<?php echo $request->last_name ?>">
             </td>
             <td>
-                <input id="col_3" name="col_3" class="input-medium mg-top-20" type="text" value="<?php echo $request->email ?>">
+                <input id="col_3" name="col_3" class="input-medium mg-top-20 inputText" type="text" value="<?php echo $request->email ?>">
             </td>
             <td>
-                <select name="col_4" class="field-custom mg-top-20" id="col_4">
+                <select name="col_4" class="field-custom mg-top-20 inputText" id="col_4">
                     <?php 
                         $roles = array('HEAD','STUDENT','PROFESSOR'
                             );
@@ -92,7 +115,7 @@
                 </select>
             </td>
             <td>
-                <select name="col_5" class="field-custom mg-top-20" id="col_5">
+                <select name="col_5" class="field-custom mg-top-20 inputText" id="col_5">
                   <?php 
                         $sta = array('PENDING','ACTIVE','INACTIVE'
                             );
@@ -106,14 +129,71 @@
                     ?>
                 </select>
             </td>
+			<td> 
+				<div class="field-custom mg-top-20" >
+				<?php
+					//if ($request->headline_linkedIn == NULL){echo "NO";} else {echo "YES";}
+								$linkedIn = true;
+								$output = "Missing:\n";
+								
+								if(!($request->picture) || $request->picture = ''){
+                                    //$output .= "  Picture <br>\n" ;
+									$output .= "  Picture\n" ;
+									$linkedIn = false;
+                                }
+                                if(!($request->headline_linkedIn)){
+                                    //$output .= "  LinkedIn <br>\n" ;
+                                    $output .= "  LinkedIn\n" ;
+									$linkedIn = false;
+                                }
+								if(!($request->experience)){
+                                    //$output .= "  Experience <br>\n" ;
+                                    $output .= "  Experience\n" ;
+									$linkedIn = false;
+                                }
+								if(!($request->skill)){
+                                    $output .= "  Skills" ;
+									$linkedIn = false;
+                                }
+								if($linkedIn == false){
+									echo "<a toggle=\"tooltip\" title=\"".$output."\">NO<br></a>";
+									//echo $output;
+								}
+								else
+									echo "YES";
+				?>
+				</div>
+				
+			</td>
+			<td>
+				<div class="field-custom mg-top-20" > 
+				<?php
+					$min = $this->spw_match_model->getMinimum();
+					if($request->rank >= $min)
+							echo 'YES';
+					elseif($request->rank < $min){
+							$need = "Needs " . ($min - $request->rank) . " more to rank";
+							//echo 'NO <br>Need ' . ($min-$request->rank) . " more";
+							echo "<a toggle=\"tooltip\" title=\"".$need."\">NO</a>";
+					}
+					else
+							echo "N/A";
+					
+				?>
+				</div>
+			</td>
             <td>
                 <div class="mg-top-20">
             <?php
                 $msg = "Are you sure you want to delete user $request->first_name $request->last_name ?";
-                $url = "id=$request->id&fn=$fn&ln=$ln&email=$email&role=$role&status=$status";
+                $url = "id=$request->id&fn=$fn&ln=$ln&email=$email&role=$role&status=$status&headline_linkedIn=headline_LinkedIn";
                 echo("<a data-toggle=\"tooltip\" title=\"Delete User\" href=".base_url('./userManagement?'.$url).
                         " onclick=\"return confirm('$msg')\"> <img id=\"\" src=".
-                        base_url('img/deletered.png')." height=\"20\" width=\"20\" > </a>");
+                        base_url('img/deletered.png')." height=\"20\" width=\"20\" > </a> 
+						<a data-toggle=\"tooltip\" title=\"Save User\" href=".base_url('./userManagement?'.$url).
+                        " onclick=\"return confirm('$msg')\"> <img id=\"\" src=".
+                        base_url('img/saveblue.png')." height=\"20\" width=\"20\" > </a>");
+				echo $fn;
             ?>
                 </div>
             </td>
@@ -122,7 +202,7 @@
     </tbody>
 </table>
 </div>
-<button id="submitRequests" type="button" class="btn btn-primary">Submit</button>
+<button id="submitRequests" type="button" class="btn btn-primary" disabled="disabled" style="background-color:gray">Save</button>
 </div>
 <script type="text/javascript">
 function filterForm(){
@@ -132,11 +212,15 @@ function filterForm(){
     var email = $('#email').val();
     var status = $('#status').val();
     var role = $("#role").val();
+	var linkedIn = $('#linkedIn').val();
+	var rank = $('#rank').val();
     
     var whereto = "./userManagement?";
     
     if(role!=='') whereto+="role="+role+"&";
     if(status!=='') whereto+="status="+status+"&";
+	if(linkedIn!=='') whereto+="linkedIn="+linkedIn+"&";
+	if(rank!=='') whereto+="rank="+rank+"&";
     if(fn!=='') whereto+="fn="+fn+"&";
     if(ln!=='') whereto+="ln="+ln+"&";
     if(email!=='') whereto+="email="+email+"&";
@@ -151,6 +235,8 @@ function filterForm(){
     window.location.href = whereto;
 }
 
+
+
 $('.text-filter').keyup(function(e){
     if(e.keyCode == 13)
     {
@@ -158,9 +244,85 @@ $('.text-filter').keyup(function(e){
     }
 });
 
+//Test to check for changed fields
+$(".inputText").each(function() {
+   var elem = $(this);
+   // Save current value of element
+   elem.data('oldVal', elem.val());
+   // Look for changes in the value
+   elem.bind("propertychange change click keyup input paste", function(event){
+      // If value has changed...
+      if (elem.data('oldVal') != elem.val()) {
+       	// Updated stored value
+       	// elem.data('oldVal', elem.val());
+       	// Do action
+		$(this).closest('tr').css('background', 'lightyellow');
+		$(this).closest('tr').find('[type=checkbox]').prop('checked', true);
+		$('.selectall').each(function() {
+				this.checked = true;
+				this.indeterminate = true;
+			});
+		$(this).closest('button').find('[type="button"]').removeAttr('disabled');
+	  }else{
+		  $(this).closest('tr').css('background', '');
+		  $(this).closest('tr').find('[type=checkbox]').prop('checked', false);
+		  $('.selectall').each(function() {
+				this.checked = false;
+				this.indeterminate = false;
+			});
+	  }
+   });
+ });
+
+$(document).ready(function() {
+     $('input[type="button"]').attr('disabled','disabled');
+     $('input[type="text"]').keyup(function() {
+        if($(this).val() != '') {
+           $('input[type="button"]').removeAttr('disabled');
+        }
+     });
+ });
+
+/*$(".inputText").keyup(function(){
+    $(this).css("background-color", "pink");
+});*/
+
+//Practice to highlight rows
+/*$('.rows').each(function () {
+	$(".inputText").each(function() {
+   		var elem = $(this);
+   		// Save current value of element
+   		elem.data('oldVal', elem.val());
+   		// Look for changes in the value
+ 	});
+	elem.bind("propertychange change click keyup input paste", function(event){
+    	// If value has changed...
+    	if (elem.data('oldVal') != elem.val()) {
+			// Updated stored value
+    	  	// elem.data('oldVal', elem.val());
+    	  	// Do action
+		 	$(this).css('background', 'lightyellow');
+		}else{
+			$(this).css('background', '');
+		}
+   		});
+ 	});
+});*/
+
+/*Practice to highlight rows upon clicking them
+$('.rows').each(function () {
+	//Check to see if background color is set or if it's set to white.
+	if(this.style.background == "" || this.style.background =="white") {
+		$(this).css('background', 'lightyellow');
+	}
+	else {
+		$(this).css('background', '');
+	}
+});
+
 $(".dropdown" ).change(function() {
     filterForm();
-});
+});*/
 
 $('#submitRequests').click(function(){
     console.log("Clicked submit");
@@ -173,6 +335,60 @@ $('#submitRequests').click(function(){
         uploadMachines(data);
     }
 });
+
+//Function for the master/parent checkbox
+$('.selectall').on('click', function(event) {
+	if(this.checked || this.indeterminate) {
+		$('.checkbox').each(function() {
+			this.checked = true;
+		});
+	}else{
+		$('.checkbox').each(function() {
+			this.checked = false;                     
+		});         
+	}
+});
+
+//Check for child checkboxes  that change and reflect it on the parent checkbox
+$(document).ready(function() {
+$('.checkbox').change(function(event) {
+	var checkExists = false;
+	var allChecks = false;
+	$('.checkbox').each(function() {
+		//If there is at least one checkbox checked...
+		if(this.checked){
+			checkExists = true;
+		}
+	});
+	
+	//Check if all checkboxes are checked
+	if ($('.checkbox:checked').length == $('.checkbox').length) {
+       	allChecks = true;
+    }
+	
+	if(checkExists){
+		if(allChecks){
+			$('.selectall').each(function() {
+				this.checked = true;
+				this.indeterminate = false;
+			});
+		}else{
+			$('.selectall').each(function() {
+				this.checked = true;
+				this.indeterminate = true;
+			});
+		}
+	}
+	else{
+		$('.selectall').each(function() {
+			this.checked = false;
+			this.indeterminate = false;
+		});
+	}
+});
+});
+
+
 
 function emulateUser(email_address,password,role,id){
     console.log("Redirecting!!!");
@@ -215,7 +431,7 @@ function getTableContent() {
         var col_3 = row.find('[name="col_3"]').val();
         var col_4 = row.find('[name="col_4"]').val();
         var col_5 = row.find('[name="col_5"]').val();
-
+		
         var obj = {
             "id":id,
             "col_1":col_1,
@@ -258,5 +474,4 @@ function isValidInput(arr){
 }
 
 </script>
-
 <?php $this->load->view("template_footer"); ?>
