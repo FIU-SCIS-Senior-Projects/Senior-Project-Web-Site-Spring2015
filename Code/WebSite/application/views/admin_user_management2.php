@@ -199,6 +199,72 @@
         </tr>
         <?php endforeach;?>
     </tbody>
+    <!-- Being filter for the footer of the table -->
+        <thead>
+            <tr>
+                <th style="display:none;">Id No.</th>
+                <th> <input name="selectall" type="checkbox" id="selectall" class="selectall" /> <div id="checkBoxList"> </th>
+                <th>Picture</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>LinkedIn</th>
+                <th>Ranks</th>
+                <th>Actions</th>
+            </tr>
+            <tr></tr>
+            <tr>
+                <!-- Filters -->
+                <th></th>
+                <th></th>
+                <th>
+                    <input id="fn" class="input-small text-filter" type="text" value="<?php echo $fn ?>">
+                </th>
+                <th>
+                    <input id="ln" class="input-small text-filter" type="text" value="<?php echo $ln ?>">
+                </th>
+                <th>
+                    <input id="email" class="input-medium text-filter" type="text" value="<?php echo $email ?>">
+                </th>
+                <th>
+                    <select class="field-custom dropdown" id="role">
+                      <?php echo '<option '.($role==='ALL ROLES'?'selected="selected"':'').' value="ALL ROLES">ALL ROLES</option>'; ?>
+                      <?php echo '<option '.($role==='STUDENT'?'selected="selected"':'').' value="STUDENT">STUDENT</option>'; ?>
+                      <?php echo '<option '.($role==='PROFESSOR'?'selected="selected"':'').'value="PROFESSOR">PROFESSOR</option>'; ?>
+                      <?php echo '<option '.($role==='HEAD'?'selected="selected"':'').' value="HEAD">HEAD</option>'; ?>
+                    </select>
+                </th>
+                <th>
+                    <select class="field-custom dropdown" id="status">
+                      <?php echo '<option '.($status==='ALL STATUS'?'selected="selected"':'').' value="ALL STATUS">ALL STATUS</option>'; ?>
+                      <?php echo '<option '.($status==='INACTIVE'?'selected="selected"':'').' value="INACTIVE">INACTIVE</option>'; ?>
+                      <?php echo '<option '.($status==='PENDING'?'selected="selected"':'').'value="PENDING">PENDING</option>'; ?>
+                      <?php echo '<option '.($status==='ACTIVE'?'selected="selected"':'').' value="ACTIVE">ACTIVE</option>'; ?>
+                    </select>
+                </th>
+                <th>
+                    <select class="field-custom dropdown" id="linkedIn">
+                      <?php echo '<option '.($linkedIn==='ALL'?'selected="selected"':'').' value="ALL">ALL</option>'; ?>
+                      <?php echo '<option '.($linkedIn==='YES'?'selected="selected"':'').' value="YES">YES</option>'; ?>
+                      <?php echo '<option '.($linkedIn==='NO'?'selected="selected"':'').' value="NO">NO</option>'; ?>
+                      <?php echo '<option '.($linkedIn==='No Picture'?'selected="selected"':'').' value="No Picture">No Picture</option>'; ?>
+                      <?php echo '<option '.($linkedIn==='No LinkedIn'?'selected="selected"':'').' value="No LinkedIn">No LinkedIn</option>'; ?>
+                      <?php echo '<option '.($linkedIn==='No Experience'?'selected="selected"':'').' value="No Experience">No Experience</option>'; ?>
+                      <?php echo '<option '.($linkedIn==='No Skills'?'selected="selected"':'').' value="No Skills">No Skills</option>'; ?>
+                    </select>
+                </th>
+                <th>
+                    <select class="field-custom dropdown" id="rank">
+                      <?php echo '<option '.($rank==='ALL'?'selected="selected"':'').' value="ALL">ALL</option>'; ?>
+                      <?php echo '<option '.($rank==='YES'?'selected="selected"':'').' value="YES">YES</option>'; ?>
+                      <?php echo '<option '.($rank==='NO'?'selected="selected"':'').' value="NO">NO</option>'; ?>
+                </th>
+                <th></th>
+                <!-- end filters -->
+            </tr>
+        </thead>
 </table>
 </div>
 <button id="submitRequests" type="button" class="btn btn-primary userBtn" disabled="disabled" style="background-color:gray">Save</button>
@@ -234,12 +300,26 @@ function filterForm(){
     window.location.href = whereto;
 }
 
-
-
 $('.text-filter').keyup(function(e){
     if(e.keyCode == 13)
     {
         filterForm();
+    }
+});
+
+$(".dropdown" ).change(function() {
+    filterForm();
+});
+
+$('#submitRequests').click(function(){
+    console.log("Clicked submit");
+    var data = getTableContent();
+    var validInput = isValidInput(data);
+    console.log("machines: ");
+    console.log(data);
+
+    if(validInput){
+        uploadMachines(data);
     }
 });
 
@@ -326,22 +406,6 @@ $(".inputText").each(function() {
     });
  });
 
-$(".dropdown" ).change(function() {
-    filterForm();
-});
-
-$('#submitRequests').click(function(){
-    console.log("Clicked submit");
-    var data = getTableContent();
-    var validInput = isValidInput(data);
-    console.log("machines: ");
-    console.log(data);
-
-    if(validInput){
-        uploadMachines(data);
-    }
-});
-
 //Function for the master/parent checkbox
 $('.selectall').on('click', function(event) {
 	if(this.checked || this.indeterminate) {
@@ -352,6 +416,10 @@ $('.selectall').on('click', function(event) {
                 this.disabled = false;
                 $(this).css('background', '');
             });
+		$('.selectall').each(function() {
+				this.checked = true;
+				this.indeterminate = false;
+			});
 	}else{
 		$('.checkbox').each(function() {
 			this.checked = false;                     
@@ -359,6 +427,10 @@ $('.selectall').on('click', function(event) {
         $('.userBtn').each(function() {
                 this.disabled = true;
                 $(this).css('background', 'gray');
+            });
+		$('.selectall').each(function() {
+                this.checked = false;
+                this.indeterminate = false;
             });   
 	}
 });
