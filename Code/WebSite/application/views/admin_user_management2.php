@@ -5,6 +5,8 @@
 
 
 <br>
+<button id="submitRequests" type="button" class="btn btn-primary userBtn" disabled="disabled" style="background-color:gray">Save</button>
+<br> </br>
 <div id="machines">
 <div class="machine col-md-12">
 
@@ -16,16 +18,16 @@
             <th></th>
             <th></th>
             <th>
-                <input id="fn" class="input-small text-filter" type="text" value="<?php echo $fn ?>">
+                <input id="fn" class="input-small text-filter fn-filter" type="text" value="<?php echo $fn ?>">
             </th>
             <th>
-                <input id="ln" class="input-small text-filter" type="text" value="<?php echo $ln ?>">
+                <input id="ln" class="input-small text-filter ln-filter" type="text" value="<?php echo $ln ?>">
             </th>
             <th>
-                <input id="email" class="input-medium text-filter" type="text" value="<?php echo $email ?>">
+                <input id="email" class="input-medium text-filter email-filter" type="text" value="<?php echo $email ?>">
             </th>
             <th>
-                <select class="field-custom dropdown" id="role">
+                <select class="field-custom dropdown role-dropdown" id="role">
                   <?php echo '<option '.($role==='ALL ROLES'?'selected="selected"':'').' value="ALL ROLES">ALL ROLES</option>'; ?>
                   <?php echo '<option '.($role==='STUDENT'?'selected="selected"':'').' value="STUDENT">STUDENT</option>'; ?>
                   <?php echo '<option '.($role==='PROFESSOR'?'selected="selected"':'').'value="PROFESSOR">PROFESSOR</option>'; ?>
@@ -33,7 +35,7 @@
                 </select>
             </th>
             <th>
-                <select class="field-custom dropdown" id="status">
+                <select class="field-custom dropdown status-dropdown" id="status">
                   <?php echo '<option '.($status==='ALL STATUS'?'selected="selected"':'').' value="ALL STATUS">ALL STATUS</option>'; ?>
                   <?php echo '<option '.($status==='INACTIVE'?'selected="selected"':'').' value="INACTIVE">INACTIVE</option>'; ?>
                   <?php echo '<option '.($status==='PENDING'?'selected="selected"':'').'value="PENDING">PENDING</option>'; ?>
@@ -41,7 +43,7 @@
                 </select>
             </th>
 			<th>
-				<select class="field-custom dropdown" id="linkedIn">
+				<select class="field-custom dropdown linkedin-dropdown" id="linkedIn">
 				  <?php echo '<option '.($linkedIn==='ALL'?'selected="selected"':'').' value="ALL">ALL</option>'; ?>
                   <?php echo '<option '.($linkedIn==='YES'?'selected="selected"':'').' value="YES">YES</option>'; ?>
                   <?php echo '<option '.($linkedIn==='NO'?'selected="selected"':'').' value="NO">NO</option>'; ?>
@@ -52,7 +54,7 @@
                 </select>
 			</th>
             <th>
-				<select class="field-custom dropdown" id="rank">
+				<select class="field-custom dropdown rank-dropdown" id="rank">
 				  <?php echo '<option '.($rank==='ALL'?'selected="selected"':'').' value="ALL">ALL</option>'; ?>
                   <?php echo '<option '.($rank==='YES'?'selected="selected"':'').' value="YES">YES</option>'; ?>
                   <?php echo '<option '.($rank==='NO'?'selected="selected"':'').' value="NO">NO</option>'; ?>
@@ -220,16 +222,16 @@
                 <th></th>
                 <th></th>
                 <th>
-                    <input id="fn" class="input-small text-filter" type="text" value="<?php echo $fn ?>">
+                    <input id="fn" class="input-small text-filter fn-filter" type="text" value="<?php echo $fn ?>">
                 </th>
                 <th>
-                    <input id="ln" class="input-small text-filter" type="text" value="<?php echo $ln ?>">
+                    <input id="ln" class="input-small text-filter ln-filter" type="text" value="<?php echo $ln ?>">
                 </th>
                 <th>
-                    <input id="email" class="input-medium text-filter" type="text" value="<?php echo $email ?>">
+                    <input id="email" class="input-medium text-filter email-filter" type="text" value="<?php echo $email ?>">
                 </th>
                 <th>
-                    <select class="field-custom dropdown" id="role">
+                    <select class="field-custom dropdown role-dropdown" id="role">
                       <?php echo '<option '.($role==='ALL ROLES'?'selected="selected"':'').' value="ALL ROLES">ALL ROLES</option>'; ?>
                       <?php echo '<option '.($role==='STUDENT'?'selected="selected"':'').' value="STUDENT">STUDENT</option>'; ?>
                       <?php echo '<option '.($role==='PROFESSOR'?'selected="selected"':'').'value="PROFESSOR">PROFESSOR</option>'; ?>
@@ -237,7 +239,7 @@
                     </select>
                 </th>
                 <th>
-                    <select class="field-custom dropdown" id="status">
+                    <select class="field-custom dropdown status-dropdown" id="status">
                       <?php echo '<option '.($status==='ALL STATUS'?'selected="selected"':'').' value="ALL STATUS">ALL STATUS</option>'; ?>
                       <?php echo '<option '.($status==='INACTIVE'?'selected="selected"':'').' value="INACTIVE">INACTIVE</option>'; ?>
                       <?php echo '<option '.($status==='PENDING'?'selected="selected"':'').'value="PENDING">PENDING</option>'; ?>
@@ -245,7 +247,7 @@
                     </select>
                 </th>
                 <th>
-                    <select class="field-custom dropdown" id="linkedIn">
+                    <select class="field-custom dropdown linkedin-dropdown" id="linkedIn">
                       <?php echo '<option '.($linkedIn==='ALL'?'selected="selected"':'').' value="ALL">ALL</option>'; ?>
                       <?php echo '<option '.($linkedIn==='YES'?'selected="selected"':'').' value="YES">YES</option>'; ?>
                       <?php echo '<option '.($linkedIn==='NO'?'selected="selected"':'').' value="NO">NO</option>'; ?>
@@ -256,7 +258,7 @@
                     </select>
                 </th>
                 <th>
-                    <select class="field-custom dropdown" id="rank">
+                    <select class="field-custom dropdown rank-dropdown" id="rank">
                       <?php echo '<option '.($rank==='ALL'?'selected="selected"':'').' value="ALL">ALL</option>'; ?>
                       <?php echo '<option '.($rank==='YES'?'selected="selected"':'').' value="YES">YES</option>'; ?>
                       <?php echo '<option '.($rank==='NO'?'selected="selected"':'').' value="NO">NO</option>'; ?>
@@ -311,7 +313,7 @@ $(".dropdown" ).change(function() {
     filterForm();
 });
 
-$('#submitRequests').click(function(){
+$('.userBtn').click(function(){
     console.log("Clicked submit");
     var data = getTableContent();
     var validInput = isValidInput(data);
@@ -321,6 +323,13 @@ $('#submitRequests').click(function(){
     if(validInput){
         uploadMachines(data);
     }
+});
+
+$(".fn-filter").each(function(){
+	var cur = $(this);
+	/*$(this).bind("propertychange change click keyup input paste", function() {
+		$(this).clone().appendTo(".fn-filter");
+	)};*/
 });
 
 //Test to check for changed fields
