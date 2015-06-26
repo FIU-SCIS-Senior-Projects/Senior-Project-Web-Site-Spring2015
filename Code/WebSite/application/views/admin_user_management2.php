@@ -5,7 +5,7 @@
 
 
 <br>
-<button id="submitRequests" type="button" class="btn btn-primary userBtn" disabled="disabled" style="background-color:gray">Save</button>
+<button id="submitRequests" type="button" class="btn btn-primary saveBtn" disabled="disabled" style="background-color:gray">Save</button>
 <br> </br>
 <div id="machines">
 <div class="machine col-md-12">
@@ -18,16 +18,16 @@
             <th></th>
             <th></th>
             <th>
-                <input id="fn" class="input-small text-filter fn-filter" type="text" value="<?php echo $fn ?>">
+                <input id="fn" class="input-small text-filter fn" type="text" value="<?php echo $fn ?>">
             </th>
             <th>
-                <input id="ln" class="input-small text-filter ln-filter" type="text" value="<?php echo $ln ?>">
+                <input id="ln" class="input-small text-filter ln" type="text" value="<?php echo $ln ?>">
             </th>
             <th>
-                <input id="email" class="input-medium text-filter email-filter" type="text" value="<?php echo $email ?>">
+                <input id="email" class="input-medium text-filter email" type="text" value="<?php echo $email ?>">
             </th>
             <th>
-                <select class="field-custom dropdown role-dropdown" id="role">
+                <select class="field-custom dropdown role" id="role">
                   <?php echo '<option '.($role==='ALL ROLES'?'selected="selected"':'').' value="ALL ROLES">ALL ROLES</option>'; ?>
                   <?php echo '<option '.($role==='STUDENT'?'selected="selected"':'').' value="STUDENT">STUDENT</option>'; ?>
                   <?php echo '<option '.($role==='PROFESSOR'?'selected="selected"':'').'value="PROFESSOR">PROFESSOR</option>'; ?>
@@ -35,7 +35,7 @@
                 </select>
             </th>
             <th>
-                <select class="field-custom dropdown status-dropdown" id="status">
+                <select class="field-custom dropdown status" id="status">
                   <?php echo '<option '.($status==='ALL STATUS'?'selected="selected"':'').' value="ALL STATUS">ALL STATUS</option>'; ?>
                   <?php echo '<option '.($status==='INACTIVE'?'selected="selected"':'').' value="INACTIVE">INACTIVE</option>'; ?>
                   <?php echo '<option '.($status==='PENDING'?'selected="selected"':'').'value="PENDING">PENDING</option>'; ?>
@@ -43,7 +43,7 @@
                 </select>
             </th>
 			<th>
-				<select class="field-custom dropdown linkedin-dropdown" id="linkedIn">
+				<select class="field-custom dropdown linkedin" id="linkedIn">
 				  <?php echo '<option '.($linkedIn==='ALL'?'selected="selected"':'').' value="ALL">ALL</option>'; ?>
                   <?php echo '<option '.($linkedIn==='YES'?'selected="selected"':'').' value="YES">YES</option>'; ?>
                   <?php echo '<option '.($linkedIn==='NO'?'selected="selected"':'').' value="NO">NO</option>'; ?>
@@ -54,7 +54,7 @@
                 </select>
 			</th>
             <th>
-				<select class="field-custom dropdown rank-dropdown" id="rank">
+				<select class="field-custom dropdown rank" id="rank">
 				  <?php echo '<option '.($rank==='ALL'?'selected="selected"':'').' value="ALL">ALL</option>'; ?>
                   <?php echo '<option '.($rank==='YES'?'selected="selected"':'').' value="YES">YES</option>'; ?>
                   <?php echo '<option '.($rank==='NO'?'selected="selected"':'').' value="NO">NO</option>'; ?>
@@ -132,7 +132,7 @@
                 </select>
             </td>
 			<td> 
-				<div class="field-custom mg-top-20" >
+				<div class="mg-top-20" >
 				<?php
 					//if ($request->headline_linkedIn == NULL){echo "NO";} else {echo "YES";}
 								$linkedIn = true;
@@ -168,7 +168,7 @@
 				
 			</td>
 			<td>
-				<div class="field-custom mg-top-20" > 
+				<div class="mg-top-20" > 
 				<?php
 					$min = $this->spw_match_model->getMinimum();
 					if($request->rank >= $min)
@@ -222,16 +222,16 @@
                 <th></th>
                 <th></th>
                 <th>
-                    <input id="fn" class="input-small text-filter fn-filter" type="text" value="<?php echo $fn ?>">
+                    <input id="fn2" class="input-small text-filter fn" type="text" value="<?php echo $fn ?>">
                 </th>
                 <th>
-                    <input id="ln" class="input-small text-filter ln-filter" type="text" value="<?php echo $ln ?>">
+                    <input id="ln2" class="input-small text-filter ln" type="text" value="<?php echo $ln ?>">
                 </th>
                 <th>
-                    <input id="email" class="input-medium text-filter email-filter" type="text" value="<?php echo $email ?>">
+                    <input id="email2" class="input-medium text-filter email" type="text" value="<?php echo $email ?>">
                 </th>
                 <th>
-                    <select class="field-custom dropdown role-dropdown" id="role">
+                    <select class="field-custom dropdown role" id="role2">
                       <?php echo '<option '.($role==='ALL ROLES'?'selected="selected"':'').' value="ALL ROLES">ALL ROLES</option>'; ?>
                       <?php echo '<option '.($role==='STUDENT'?'selected="selected"':'').' value="STUDENT">STUDENT</option>'; ?>
                       <?php echo '<option '.($role==='PROFESSOR'?'selected="selected"':'').'value="PROFESSOR">PROFESSOR</option>'; ?>
@@ -239,7 +239,7 @@
                     </select>
                 </th>
                 <th>
-                    <select class="field-custom dropdown status-dropdown" id="status">
+                    <select class="field-custom dropdown status" id="status2">
                       <?php echo '<option '.($status==='ALL STATUS'?'selected="selected"':'').' value="ALL STATUS">ALL STATUS</option>'; ?>
                       <?php echo '<option '.($status==='INACTIVE'?'selected="selected"':'').' value="INACTIVE">INACTIVE</option>'; ?>
                       <?php echo '<option '.($status==='PENDING'?'selected="selected"':'').'value="PENDING">PENDING</option>'; ?>
@@ -247,7 +247,7 @@
                     </select>
                 </th>
                 <th>
-                    <select class="field-custom dropdown linkedin-dropdown" id="linkedIn">
+                    <select  class="field-custom dropdown linkedin" id="linkedIn2">
                       <?php echo '<option '.($linkedIn==='ALL'?'selected="selected"':'').' value="ALL">ALL</option>'; ?>
                       <?php echo '<option '.($linkedIn==='YES'?'selected="selected"':'').' value="YES">YES</option>'; ?>
                       <?php echo '<option '.($linkedIn==='NO'?'selected="selected"':'').' value="NO">NO</option>'; ?>
@@ -258,7 +258,7 @@
                     </select>
                 </th>
                 <th>
-                    <select class="field-custom dropdown rank-dropdown" id="rank">
+                    <select class="field-custom dropdown rank" id="rank2">
                       <?php echo '<option '.($rank==='ALL'?'selected="selected"':'').' value="ALL">ALL</option>'; ?>
                       <?php echo '<option '.($rank==='YES'?'selected="selected"':'').' value="YES">YES</option>'; ?>
                       <?php echo '<option '.($rank==='NO'?'selected="selected"':'').' value="NO">NO</option>'; ?>
@@ -269,7 +269,7 @@
         </thead>
 </table>
 </div>
-<button id="submitRequests" type="button" class="btn btn-primary userBtn" disabled="disabled" style="background-color:gray">Save</button>
+<button id="submitRequests" type="button" class="btn btn-primary saveBtn" disabled="disabled" style="background-color:gray">Save</button>
 </div>
 <script type="text/javascript">
 function filterForm(){
@@ -302,6 +302,31 @@ function filterForm(){
     window.location.href = whereto;
 }
 
+//Here begins the code that copies both text filters
+//-----START Copy Filter-----
+//first name
+$("#fn").keyup(function(e){var val = $(this).val(); $("#fn2").val(val);});
+$("#fn2").keyup(function(e){var val = $(this).val(); $("#fn").val(val);});
+//last name
+$("#ln").keyup(function(e){var val = $(this).val(); $("#ln2").val(val);});
+$("#ln2").keyup(function(e){var val = $(this).val(); $("#ln").val(val);});
+//email
+$("#email").keyup(function(e){var val = $(this).val(); $("#email2").val(val);});
+$("#email2").keyup(function(e){var val = $(this).val(); $("#email").val(val);});
+//role
+$("#role").change(function(e){var val = $(this).val(); $("#role2").val(val);});
+$("#role2").change(function(e){var val = $(this).val(); $("#role").val(val);});
+//status
+$("#status").change(function(e){var val = $(this).val(); $("#status2").val(val);});
+$("#status2").change(function(e){var val = $(this).val(); $("#status").val(val);});
+//linkedin
+$("#linkedIn").change(function(e){var val = $(this).val(); $("#linkedIn2").val(val);});
+$("#linkedIn2").change(function(e){var val = $(this).val(); $("#linkedIn").val(val);});
+//rank
+$("#rank").change(function(e){var val = $(this).val(); $("#rank2").val(val);});
+$("#rank2").change(function(e){var val = $(this).val(); $("#rank").val(val);});
+//------END Copy Filter------
+
 $('.text-filter').keyup(function(e){
     if(e.keyCode == 13)
     {
@@ -313,7 +338,7 @@ $(".dropdown" ).change(function() {
     filterForm();
 });
 
-$('.userBtn').click(function(){
+$('.saveBtn').click(function(){
     console.log("Clicked submit");
     var data = getTableContent();
     var validInput = isValidInput(data);
@@ -323,13 +348,6 @@ $('.userBtn').click(function(){
     if(validInput){
         uploadMachines(data);
     }
-});
-
-$(".fn-filter").each(function(){
-	var cur = $(this);
-	/*$(this).bind("propertychange change click keyup input paste", function() {
-		$(this).clone().appendTo(".fn-filter");
-	)};*/
 });
 
 //Test to check for changed fields
@@ -387,7 +405,7 @@ $(".inputText").each(function() {
             allChecks = true;
         }
         if(checkExists){
-                $('.userBtn').each(function() {
+                $('.saveBtn').each(function() {
                         this.disabled = false;
                         $(this).css('background', '');
                     });
@@ -407,7 +425,7 @@ $(".inputText").each(function() {
                 this.checked = false;
                 this.indeterminate = false;
             });
-            $('.userBtn').each(function() {
+            $('.saveBtn').each(function() {
                     this.disabled = true;
                     $(this).css('background', 'gray');
                 });
@@ -421,7 +439,7 @@ $('.selectall').on('click', function(event) {
 		$('.checkbox').each(function() {
 			this.checked = true;
 		});
-        $('.userBtn').each(function() {
+        $('.saveBtn').each(function() {
                 this.disabled = false;
                 $(this).css('background', '');
             });
@@ -433,7 +451,7 @@ $('.selectall').on('click', function(event) {
 		$('.checkbox').each(function() {
 			this.checked = false;                     
 		});
-        $('.userBtn').each(function() {
+        $('.saveBtn').each(function() {
                 this.disabled = true;
                 $(this).css('background', 'gray');
             });
@@ -482,7 +500,7 @@ $('.checkbox').change(function(event) {
 			this.checked = false;
 			this.indeterminate = false;
 		});
-        $('.userBtn').each(function() {
+        $('.saveBtn').each(function() {
                 this.disabled = true;
                 $(this).css('background', 'gray');
             });
