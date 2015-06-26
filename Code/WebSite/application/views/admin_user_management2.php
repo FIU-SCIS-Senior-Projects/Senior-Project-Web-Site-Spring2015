@@ -479,7 +479,7 @@ $('.checkbox').change(function(event) {
     }
 	
 	if(checkExists){
-        $('.userBtn').each(function() {
+        $('.saveBtn').each(function() {
                 this.disabled = false;
                 $(this).css('background', '');
             });
