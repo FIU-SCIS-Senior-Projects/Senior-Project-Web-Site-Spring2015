@@ -115,7 +115,7 @@
                 </select>
             </td>
             <td>
-                <select name="col_5" class="field-custom mg-top-20 inputText" id="col_5">
+                <select name="col_5" class="field-custom mg-top-20 inputText" id="col_5" >
                   <?php 
                         $sta = array('PENDING','ACTIVE','INACTIVE'
                             );
@@ -190,9 +190,8 @@
                 echo("<a data-toggle=\"tooltip\" title=\"Delete User\" href=".base_url('./userManagement?'.$url).
                         " onclick=\"return confirm('$msg')\"> <img id=\"\" src=".
                         base_url('img/deletered.png')." height=\"20\" width=\"20\" > </a> 
-						<a data-toggle=\"tooltip\" title=\"Save User\" href=".base_url('./userManagement?'.$url).
-                        " onclick=\"return confirm('$msg')\"> <img id=\"\" src=".
-                        base_url('img/saveblue.png')." height=\"20\" width=\"20\" > </a>");
+						<a data-toggle=\"tooltip\" title=\"Save User\"> <img id=\"\" src=".
+                        base_url('img/savegray.png')." height=\"20\" width=\"20\" > </a>");
 				echo $fn;
             ?>
                 </div>
@@ -202,7 +201,7 @@
     </tbody>
 </table>
 </div>
-<button id="submitRequests" type="button" class="btn btn-primary" disabled="disabled" style="background-color:gray">Save</button>
+<button id="submitRequests" type="button" class="btn btn-primary userBtn" disabled="disabled" style="background-color:gray">Save</button>
 </div>
 <script type="text/javascript">
 function filterForm(){
@@ -246,83 +245,90 @@ $('.text-filter').keyup(function(e){
 
 //Test to check for changed fields
 $(".inputText").each(function() {
-   var elem = $(this);
-   // Save current value of element
-   elem.data('oldVal', elem.val());
-   // Look for changes in the value
-   elem.bind("propertychange change click keyup input paste", function(event){
+    //Collect the values of each column
+    var old_col_1 = ($(this).closest('tr').find('[name=col_1]'));
+    var old_col_2 = ($(this).closest('tr').find('[name=col_2]'));
+    var old_col_3 = ($(this).closest('tr').find('[name=col_3]'));
+    var old_col_4 = ($(this).closest('tr').find('[name=col_4]'));
+    var old_col_5 = ($(this).closest('tr').find('[name=col_5]'));
+    
+    // Save current values of elements
+    old_col_1.data('oldFn', old_col_1.val());
+    old_col_2.data('oldLn', old_col_2.val());
+    old_col_3.data('oldEmail', old_col_3.val());
+    old_col_4.data('oldRole', old_col_4.val());
+    old_col_5.data('oldStatus', old_col_5.val());
+
+    // Look for changes in the value
+    $(this).bind("propertychange change click keyup input paste", function(event){
+        var checkExists = false;
+        var allChecks = false;
+        // Updated stored value, for SCIENCE!
+        //    elem.data('oldVal', elem.val());
+
+        var col_1 = ($(this).closest('tr').find('[name=col_1]').val());
+        var col_2 = ($(this).closest('tr').find('[name=col_2]').val());
+        var col_3 = ($(this).closest('tr').find('[name=col_3]').val());
+        var col_4 = ($(this).closest('tr').find('[name=col_4]').val());
+        var col_5 = ($(this).closest('tr').find('[name=col_5]').val());
+      
+      //Testing purposes, use Inspect Element and look at console
+      //  console.log(old_col_1.data('oldFn'));
+      //  console.log(col_1, col_2, col_3, col_4, col_5);
+
       // If value has changed...
-      if (elem.data('oldVal') != elem.val()) {
-       	// Updated stored value
-       	// elem.data('oldVal', elem.val());
-       	// Do action
-		$(this).closest('tr').css('background', 'lightyellow');
-		$(this).closest('tr').find('[type=checkbox]').prop('checked', true);
-		$('.selectall').each(function() {
-				this.checked = true;
-				this.indeterminate = true;
-			});
-		$(this).closest('button').find('[type="button"]').removeAttr('disabled');
+      if (old_col_1.data('oldFn') != (col_1) || old_col_2.data('oldLn') != (col_2) || old_col_3.data('oldEmail') != (col_3) 
+            || old_col_4.data('oldRole') != (col_4) || old_col_5.data('oldStatus') != (col_5) ) {
+           	
+            $(this).closest('tr').css('background', 'lightyellow');
+            $(this).closest('tr').find('[type=checkbox]').prop('checked', true);
 	  }else{
-		  $(this).closest('tr').css('background', '');
-		  $(this).closest('tr').find('[type=checkbox]').prop('checked', false);
-		  $('.selectall').each(function() {
-				this.checked = false;
-				this.indeterminate = false;
-			});
+            $(this).closest('tr').css('background', '');
+            $(this).closest('tr').find('[type=checkbox]').prop('checked', false);
 	  }
-   });
- });
-
-$(document).ready(function() {
-     $('input[type="button"]').attr('disabled','disabled');
-     $('input[type="text"]').keyup(function() {
-        if($(this).val() != '') {
-           $('input[type="button"]').removeAttr('disabled');
+      
+      $('.checkbox').each(function() {
+            //If there is at least one checkbox checked...
+            if(this.checked){
+                checkExists = true;
+            }
+        });
+      //Check if all checkboxes are checked
+        if ($('.checkbox:checked').length == $('.checkbox').length) {
+            allChecks = true;
         }
-     });
+        if(checkExists){
+                $('.userBtn').each(function() {
+                        this.disabled = false;
+                        $(this).css('background', '');
+                    });
+                if(allChecks){
+                    $('.selectall').each(function() {
+                        this.checked = true;
+                        this.indeterminate = false;
+                    });
+                }else{
+                    $('.selectall').each(function() {
+                        this.checked = true;
+                        this.indeterminate = true;
+                    });
+                }
+        }else{
+            $('.selectall').each(function() {
+                this.checked = false;
+                this.indeterminate = false;
+            });
+            $('.userBtn').each(function() {
+                    this.disabled = true;
+                    $(this).css('background', 'gray');
+                });
+        }
+    });
  });
-
-/*$(".inputText").keyup(function(){
-    $(this).css("background-color", "pink");
-});*/
-
-//Practice to highlight rows
-/*$('.rows').each(function () {
-	$(".inputText").each(function() {
-   		var elem = $(this);
-   		// Save current value of element
-   		elem.data('oldVal', elem.val());
-   		// Look for changes in the value
- 	});
-	elem.bind("propertychange change click keyup input paste", function(event){
-    	// If value has changed...
-    	if (elem.data('oldVal') != elem.val()) {
-			// Updated stored value
-    	  	// elem.data('oldVal', elem.val());
-    	  	// Do action
-		 	$(this).css('background', 'lightyellow');
-		}else{
-			$(this).css('background', '');
-		}
-   		});
- 	});
-});*/
-
-/*Practice to highlight rows upon clicking them
-$('.rows').each(function () {
-	//Check to see if background color is set or if it's set to white.
-	if(this.style.background == "" || this.style.background =="white") {
-		$(this).css('background', 'lightyellow');
-	}
-	else {
-		$(this).css('background', '');
-	}
-});
 
 $(".dropdown" ).change(function() {
     filterForm();
-});*/
+});
 
 $('#submitRequests').click(function(){
     console.log("Clicked submit");
@@ -342,15 +348,22 @@ $('.selectall').on('click', function(event) {
 		$('.checkbox').each(function() {
 			this.checked = true;
 		});
+        $('.userBtn').each(function() {
+                this.disabled = false;
+                $(this).css('background', '');
+            });
 	}else{
 		$('.checkbox').each(function() {
 			this.checked = false;                     
-		});         
+		});
+        $('.userBtn').each(function() {
+                this.disabled = true;
+                $(this).css('background', 'gray');
+            });   
 	}
 });
 
 //Check for child checkboxes  that change and reflect it on the parent checkbox
-$(document).ready(function() {
 $('.checkbox').change(function(event) {
 	var checkExists = false;
 	var allChecks = false;
@@ -367,6 +380,10 @@ $('.checkbox').change(function(event) {
     }
 	
 	if(checkExists){
+        $('.userBtn').each(function() {
+                this.disabled = false;
+                $(this).css('background', '');
+            });
 		if(allChecks){
 			$('.selectall').each(function() {
 				this.checked = true;
@@ -384,8 +401,11 @@ $('.checkbox').change(function(event) {
 			this.checked = false;
 			this.indeterminate = false;
 		});
+        $('.userBtn').each(function() {
+                this.disabled = true;
+                $(this).css('background', 'gray');
+            });
 	}
-});
 });
 
 
