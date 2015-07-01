@@ -10,7 +10,7 @@
 <div id="machines">
 <div class="machine col-md-12">
 
-<table class="table table-bordered" id="machines_table">
+<table class="table table-bordered" id="machines_table"  onunload="checkSave()" >
     <thead>
 		<tr></tr>
         <tr>
@@ -272,6 +272,39 @@
 <button id="submitRequests" type="button" class="btn btn-primary saveBtn" disabled="disabled" style="background-color:gray">Save</button>
 </div>
 <script type="text/javascript">
+//Global variable to check for form change in the table
+var hasChange = false;
+
+$(window).bind("beforeunload", function (e) {
+	if(hasChange){
+		//var confirmationMessage = 'It looks like you have been editing something.';
+		//confirmationMessage += 'If you leave before saving, your changes will be lost.';
+		var confirmationMessage = 'You have unsaved changes \n ';
+		//confirmationMessage += 'Added text for more warnings.';
+	
+		window.confirm = confirmationMessage; //Gecko + IE
+		return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+		//Credit Source
+		//http://stackoverflow.com/questions/7317273/warn-user-before-leaving-web-page-with-unsaved-changes
+	}else{
+		return underfined;
+	}
+});
+
+function checkSave() {
+	var sSave;
+	if (hasChange) {
+		sSave = window.confirm("You have some changes that have not been saved. Click OK to save now or CANCEL to continue without saving.");
+		if (sSave == true) {
+			document.getElementById('__EVENTTARGET').value = 'btnSubmit';
+			document.getElementById('__EVENTARGUMENT').value = 'Click';  
+			window.document.formName.submit();
+		} else {
+			 return true;
+		}
+	}
+}
+
 function filterForm(){
    
     var fn = $("#fn").val();
@@ -370,6 +403,7 @@ $(".inputText").each(function() {
     $(this).bind("propertychange change click keyup input paste", function(event){
         var checkExists = false;
         var allChecks = false;
+		hasChange = false;
         // Updated stored value, for SCIENCE!
         //    elem.data('oldVal', elem.val());
 
@@ -379,7 +413,7 @@ $(".inputText").each(function() {
         var col_4 = ($(this).closest('tr').find('[name=col_4]').val());
         var col_5 = ($(this).closest('tr').find('[name=col_5]').val());
       
-      //Testing purposes, use Inspect Element and look at console
+      // For testing purposes, use Inspect Element and look at console
       //  console.log(old_col_1.data('oldFn'));
       //  console.log(col_1, col_2, col_3, col_4, col_5);
 
@@ -393,7 +427,22 @@ $(".inputText").each(function() {
             $(this).closest('tr').css('background', '');
             $(this).closest('tr').find('[type=checkbox]').prop('checked', false);
 	  }
-      
+	  
+	  //Check for any changes in table here
+	  $("tr").each(function() {
+			if($(this).css("background-color") == "rgb(255, 255, 224)"){
+				hasChange = true;
+			}
+	  });
+	  
+	  /*/Test if changes were made
+	  if(hasChange){
+		  console.log("The form has change!");
+	  }
+	  else{
+		  console.log("No changes");
+	  }*/
+	  
       $('.checkbox').each(function() {
             //If there is at least one checkbox checked...
             if(this.checked){
