@@ -192,6 +192,7 @@
                 echo("<a data-toggle=\"tooltip\" title=\"Delete User\" href=".base_url('./userManagement?'.$url).
                         " onclick=\"return confirm('$msg')\"> <img id=\"\" src=".
                         base_url('img/deletered.png')." height=\"20\" width=\"20\" > </a> 
+						
 						<a data-toggle=\"tooltip\" title=\"Save User\"> <img id=\"\" src=".
                         base_url('img/savegray.png')." height=\"20\" width=\"20\" > </a>");
 				echo $fn;
@@ -274,36 +275,8 @@
 <script type="text/javascript">
 //Global variable to check for form change in the table
 var hasChange = false;
-
-$(window).bind("beforeunload", function (e) {
-	if(hasChange){
-		//var confirmationMessage = 'It looks like you have been editing something.';
-		//confirmationMessage += 'If you leave before saving, your changes will be lost.';
-		var confirmationMessage = 'You have unsaved changes \n ';
-		//confirmationMessage += 'Added text for more warnings.';
-	
-		window.confirm = confirmationMessage; //Gecko + IE
-		return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
-		//Credit Source
-		//http://stackoverflow.com/questions/7317273/warn-user-before-leaving-web-page-with-unsaved-changes
-	}else{
-		return underfined;
-	}
-});
-
-function checkSave() {
-	var sSave;
-	if (hasChange) {
-		sSave = window.confirm("You have some changes that have not been saved. Click OK to save now or CANCEL to continue without saving.");
-		if (sSave == true) {
-			document.getElementById('__EVENTTARGET').value = 'btnSubmit';
-			document.getElementById('__EVENTARGUMENT').value = 'Click';  
-			window.document.formName.submit();
-		} else {
-			 return true;
-		}
-	}
-}
+var clickedSave = false;
+var confirmMsg = 'You have unsaved changes \nIf you leave before saving, you will lose changes made.';
 
 function filterForm(){
    
@@ -372,6 +345,7 @@ $(".dropdown" ).change(function() {
 });
 
 $('.saveBtn').click(function(){
+	clickedSave = true;
     console.log("Clicked submit");
     var data = getTableContent();
     var validInput = isValidInput(data);
@@ -381,6 +355,17 @@ $('.saveBtn').click(function(){
     if(validInput){
         uploadMachines(data);
     }
+});
+
+$(window).bind("beforeunload", function (e) {
+	if(!(clickedSave)){
+		if(hasChange){
+			window.confirm = confirmMsg;
+			return confirmMsg;
+		}else{
+			return underfined;
+		}
+	}
 });
 
 //Test to check for changed fields
@@ -404,8 +389,6 @@ $(".inputText").each(function() {
         var checkExists = false;
         var allChecks = false;
 		hasChange = false;
-        // Updated stored value, for SCIENCE!
-        //    elem.data('oldVal', elem.val());
 
         var col_1 = ($(this).closest('tr').find('[name=col_1]').val());
         var col_2 = ($(this).closest('tr').find('[name=col_2]').val());
@@ -434,14 +417,6 @@ $(".inputText").each(function() {
 				hasChange = true;
 			}
 	  });
-	  
-	  /*/Test if changes were made
-	  if(hasChange){
-		  console.log("The form has change!");
-	  }
-	  else{
-		  console.log("No changes");
-	  }*/
 	  
       $('.checkbox').each(function() {
             //If there is at least one checkbox checked...
