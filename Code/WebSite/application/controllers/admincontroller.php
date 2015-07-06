@@ -729,7 +729,7 @@ class AdminController extends CI_Controller {
             $this->getActiveUsersAndByPassIfNeeded($inputForm);
             /*update user info*/
             $success = $this->spw_user_model->updateUsers($inputForm);
-            if($success)setFlashMessage($this, "Succesfully updated user(s)");
+            if($success)setFlashMessage($this, "Successfully updated user(s)");
             die(json_encode(array("success"=> $success)));
         }
         if($user_id){

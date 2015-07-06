@@ -188,13 +188,15 @@
                 <div class="mg-top-20">
             <?php
                 $msg = "Are you sure you want to delete user $request->first_name $request->last_name ?";
-                $url = "id=$request->id&fn=$fn&ln=$ln&email=$email&role=$role&status=$status&headline_linkedIn=headline_LinkedIn";
+                $url = "id=$request->id&fn=$fn&ln=$ln&email=$email&role=$role&status=$status&linkedIn=$linkedIn&rank=$rank";
+				//Delete Icon
                 echo("<a data-toggle=\"tooltip\" title=\"Delete User\" href=".base_url('./userManagement?'.$url).
                         " onclick=\"return confirm('$msg')\"> <img id=\"\" src=".
-                        base_url('img/deletered.png')." height=\"20\" width=\"20\" > </a> 
-						
-						<a data-toggle=\"tooltip\" title=\"Save User\"> <img id=\"\" src=".
-                        base_url('img/savegray.png')." height=\"20\" width=\"20\" > </a>");
+                        base_url('img/deletered.png')." height=\"20\" width=\"20\" > </a>");
+				//Save Icon
+				echo("<button data-toggle=\"tooltip\" title=\"Save User\" class=\"saveUser\" href=\"\"
+                        disabled=\"disabled\" style=\"border:0px; background-color:transparent\"> <img id=\"\" src=". 
+                        base_url('img/savegray.png')." class=\"saveImg\" height=\"20\" width=\"20\"> </button>");
 				echo $fn;
             ?>
                 </div>
@@ -273,10 +275,10 @@
 <button id="submitRequests" type="button" class="btn btn-primary saveBtn" disabled="disabled" style="background-color:gray">Save</button>
 </div>
 <script type="text/javascript">
-//Global variable to check for form change in the table
+//Local variables to check for form change in the table
 var hasChange = false;
-var clickedSave = false;
-var confirmMsg = 'You have unsaved changes \nIf you leave before saving, you will lose changes made.';
+var clickedUserSave = false;
+var confirmMsg = '';
 
 function filterForm(){
    
@@ -345,8 +347,33 @@ $(".dropdown" ).change(function() {
 });
 
 $('.saveBtn').click(function(){
-	clickedSave = true;
-    console.log("Clicked submit");
+	confirmMsg = 'You are about to save checked users.\nIf you continue and there are unsaved changes unchecked, you will lose those changes.';
+	if(window.confirm(confirmMsg)){
+		clickedUserSave = true;
+		console.log("Clicked submit");
+		var data = getTableContent();
+		var validInput = isValidInput(data);
+		console.log("machines: ");
+		console.log(data);
+
+		if(validInput){
+			uploadMachines(data);
+		}
+	}
+	
+});
+
+$('.saveUser').click(function(){
+	clickedUserSave = true;
+    console.log("Clicked save user");
+	$('.checkbox').each(function() {
+		this.checked = false;
+	});
+	$('.selectall').each(function() {
+		this.checked = true;
+		this.indeterminate = true;
+	});
+	$(this).closest('tr').find('[type=checkbox]').prop('checked', true);
     var data = getTableContent();
     var validInput = isValidInput(data);
     console.log("machines: ");
@@ -358,7 +385,8 @@ $('.saveBtn').click(function(){
 });
 
 $(window).bind("beforeunload", function (e) {
-	if(!(clickedSave)){
+	var confirmMsg = 'You have unsaved changes \nIf you leave before saving, you will lose changes made.';
+	if(!(clickedUserSave)){
 		if(hasChange){
 			window.confirm = confirmMsg;
 			return confirmMsg;
@@ -406,9 +434,14 @@ $(".inputText").each(function() {
            	
             $(this).closest('tr').css('background', 'lightyellow');
             $(this).closest('tr').find('[type=checkbox]').prop('checked', true);
+			$(this).closest('tr').find('[class=saveUser]').attr('disabled', false);
+			//$(this).closest('tr').find('[class=saveUser]').attr("src", "img/saveblue.png");
+			$(this).closest('tr').find('[class=saveImg]').attr('src', 'img/saveblue.png');
 	  }else{
             $(this).closest('tr').css('background', '');
             $(this).closest('tr').find('[type=checkbox]').prop('checked', false);
+			$(this).closest('tr').find('[class=saveUser]').attr('disabled', true);
+			$(this).closest('tr').find('[class=saveImg]').attr('src', 'img/savegray.png');
 	  }
 	  
 	  //Check for any changes in table here
@@ -531,8 +564,6 @@ $('.checkbox').change(function(event) {
 	}
 });
 
-
-
 function emulateUser(email_address,password,role,id){
     console.log("Redirecting!!!");
     $.redirect("./admin/impersonate", { "email_address": email_address, "password": password, "role":role, "id":id });
@@ -563,7 +594,8 @@ function uploadMachines(machineList){
     
 }
 
-function getTableContent() {
+//Old version of this code, will save all users on the table
+/*function getTableContent() {
     var data = [];
     var table = $('#machines_table tbody tr');
     for(var i = 0 ; i< table.length;i++){
@@ -585,6 +617,36 @@ function getTableContent() {
         };
         data.push(obj);
     }
+    return data;
+}*/
+
+//This will save users with checked check boxes on the table
+function getTableContent() {
+    var data = [];
+    var table = $('#machines_table tbody tr');
+	var i = 0;
+	$('.checkbox').each(function() {
+		if(this.checked){
+			var row = table.eq(i);
+			var id = row.find('[name="id"]').val();
+			var col_1 = row.find('[name="col_1"]').val();
+			var col_2 = row.find('[name="col_2"]').val();
+			var col_3 = row.find('[name="col_3"]').val();
+			var col_4 = row.find('[name="col_4"]').val();
+			var col_5 = row.find('[name="col_5"]').val();
+			
+			var obj = {
+				"id":id,
+				"col_1":col_1,
+				"col_2":col_2,
+				"col_3":col_3,
+				"col_4":col_4,
+				"col_5":col_5
+			};
+			data.push(obj);
+		}
+		i++;
+	});
     return data;
 }
 
