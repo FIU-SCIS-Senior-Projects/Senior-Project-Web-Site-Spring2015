@@ -6,6 +6,8 @@
 
 <br>
 <button id="submitRequests" type="button" class="btn btn-primary saveBtn" disabled="disabled" style="background-color:gray">Save</button>
+<button id="activateRequests" type="button" class="btn btn-primary actBtn" disabled="disabled" style="background-color:gray;margin-left:1em">Activate</button>
+<button id="deactivateRequests" type="button" class="btn btn-primary deactBtn" disabled="disabled" style="background-color:gray;margin-left:1em">Deactivate</button>
 <br> </br>
 <div id="machines">
 <div class="machine col-md-12">
@@ -273,12 +275,21 @@
 </table>
 </div>
 <button id="submitRequests" type="button" class="btn btn-primary saveBtn" disabled="disabled" style="background-color:gray">Save</button>
+<button id="activateRequests" type="button" class="btn btn-primary actBtn" disabled="disabled" style="background-color:gray;margin-left:1em">Activate</button>
+<button id="deactivateRequests" type="button" class="btn btn-primary deactBtn" disabled="disabled" style="background-color:gray;margin-left:1em">Deactivate</button>
 </div>
 <script type="text/javascript">
 //Local variables to check for form change in the table
 var hasChange = false;
 var clickedUserSave = false;
+var userChange = false;
 var confirmMsg = '';
+//These are used to collect new changes when user icon is clicked
+var old_col_1;
+var old_col_2;
+var old_col_3;
+var old_col_4;
+var old_col_5;
 
 function filterForm(){
    
@@ -309,6 +320,12 @@ function filterForm(){
     console.log(whereto);
     window.location.href = whereto;
 }
+
+$(document).ready(function() {
+    console.log( "ready!" );
+	//Check for how check boxes look
+	$('.checkbox').trigger('change');
+});
 
 //Here begins the code that copies both text filters
 //-----START Copy Filter-----
@@ -348,9 +365,9 @@ $(".dropdown" ).change(function() {
 
 $('.saveBtn').click(function(){
 	confirmMsg = 'You are about to save checked users.\nIf you continue and there are unsaved changes unchecked, you will lose those changes.';
+	console.log("Clicked save");
 	if(window.confirm(confirmMsg)){
 		clickedUserSave = true;
-		console.log("Clicked submit");
 		var data = getTableContent();
 		var validInput = isValidInput(data);
 		console.log("machines: ");
@@ -364,24 +381,135 @@ $('.saveBtn').click(function(){
 });
 
 $('.saveUser').click(function(){
-	clickedUserSave = true;
-    console.log("Clicked save user");
-	$('.checkbox').each(function() {
-		this.checked = false;
-	});
-	$('.selectall').each(function() {
-		this.checked = true;
-		this.indeterminate = true;
-	});
-	$(this).closest('tr').find('[type=checkbox]').prop('checked', true);
-    var data = getTableContent();
+    console.log("Clicked save icon");
+	var data = [];
+    var table = $('#machines_table tbody tr');
+	var id = $(this).closest('tr').find('[name="id"]').val();
+	var col_1 = ($(this).closest('tr').find('[name=col_1]').val());
+	var col_2 = ($(this).closest('tr').find('[name=col_2]').val());
+	var col_3 = ($(this).closest('tr').find('[name=col_3]').val());
+	var col_4 = ($(this).closest('tr').find('[name=col_4]').val());
+	var col_5 = ($(this).closest('tr').find('[name=col_5]').val());
+			
+	var obj = {
+		"id":id,
+		"col_1":col_1,
+		"col_2":col_2,
+		"col_3":col_3,
+		"col_4":col_4,
+		"col_5":col_5
+	};
+	data.push(obj);
     var validInput = isValidInput(data);
     console.log("machines: ");
     console.log(data);
 
     if(validInput){
-        uploadMachines(data);
+		userChange = true;
+		//Display changes when successful
+		$(this).closest('tr').css('background', '');
+		$(this).closest('tr').find('[type=checkbox]').prop('checked', false);
+		$(this).closest('tr').find('[class=saveUser]').attr('disabled', true);
+		$(this).closest('tr').find('[class=saveImg]').attr('src', 'img/savegray.png');
+				
+		//Collect the new values of current row
+		var old_col_1 = ($(this).closest('tr').find('[name=col_1]'));
+		var old_col_2 = ($(this).closest('tr').find('[name=col_2]'));
+		var old_col_3 = ($(this).closest('tr').find('[name=col_3]'));
+		var old_col_4 = ($(this).closest('tr').find('[name=col_4]'));
+		var old_col_5 = ($(this).closest('tr').find('[name=col_5]'));
+		
+		//Save current values of elements
+		old_col_1.data('oldFn', old_col_1.val());
+		old_col_2.data('oldLn', old_col_2.val());
+		old_col_3.data('oldEmail', old_col_3.val());
+		old_col_4.data('oldRole', old_col_4.val());
+		old_col_5.data('oldStatus', old_col_5.val());
+		
+		//Check for any other changes
+		hasChange = false;
+		$("tr").each(function() {
+			if($(this).css("background-color") == "rgb(255, 255, 224)"){
+				hasChange = true;
+			}
+		});
+		
+		//Check for how check boxes look
+		$('.checkbox').trigger('change');
+		
+		//Attempt upload
+        uploadUser(data);
     }
+});
+
+function uploadUser(machineList){
+    var url = "./userManagement";
+    console.log(url);
+    console.log(JSON.stringify(machineList));
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: JSON.stringify(machineList),
+        dataType: "json",
+        success: function(response){
+            console.log("response");
+            console.log(response);
+            if(response.success){
+                //show message when successful
+                alert("Upload Success!");
+            }else{
+                //show message when not success
+                alert("Upload Failed");
+            }
+        }
+    });
+    
+}
+
+$('.actBtn').click(function(){
+	alert("Clicked Activate Button!");
+	/*confirmMsg = 'You are about to activate checked users.\nIf you continue and there are unsaved changes unchecked, you will lose those changes.';
+	console.log("Clicked activate");
+	if(window.confirm(confirmMsg)){
+		clickedUserSave = true;
+		$('.checkbox').each(function() {
+			if(this.checked){
+				//var cur = $(this).closest('tr').find('[name=col_5]').val();
+				$(this).closest('tr').find('[name=col_5]').val('ACTIVE');
+			}
+		});
+		var data = getTableContent();
+		var validInput = isValidInput(data);
+		console.log("machines: ");
+		console.log(data);
+
+		if(validInput){
+			uploadMachines(data);
+		}
+	}*/
+});
+
+$('.deactBtn').click(function(){
+	alert("Clicked Deactivate Button!");
+	/*confirmMsg = 'You are about to deactivate checked users.\nIf you continue and there are unsaved changes unchecked, you will lose those changes.';
+	console.log("Clicked deactivate");
+	if(window.confirm(confirmMsg)){
+		clickedUserSave = true;
+		$('.checkbox').each(function() {
+			if(this.checked){
+				//var cur = $(this).closest('tr').find('[name=col_5]').val();
+				$(this).closest('tr').find('[name=col_5]').val('INACTIVE');
+			}
+		});
+		var data = getTableContent();
+		var validInput = isValidInput(data);
+		console.log("machines: ");
+		console.log(data);
+
+		if(validInput){
+			uploadMachines(data);
+		}
+	}*/
 });
 
 $(window).bind("beforeunload", function (e) {
@@ -414,9 +542,8 @@ $(".inputText").each(function() {
 
     // Look for changes in the value
     $(this).bind("propertychange change click keyup input paste", function(event){
-        var checkExists = false;
-        var allChecks = false;
 		hasChange = false;
+		console.log(getUserChange());
 
         var col_1 = ($(this).closest('tr').find('[name=col_1]').val());
         var col_2 = ($(this).closest('tr').find('[name=col_2]').val());
@@ -435,7 +562,6 @@ $(".inputText").each(function() {
             $(this).closest('tr').css('background', 'lightyellow');
             $(this).closest('tr').find('[type=checkbox]').prop('checked', true);
 			$(this).closest('tr').find('[class=saveUser]').attr('disabled', false);
-			//$(this).closest('tr').find('[class=saveUser]').attr("src", "img/saveblue.png");
 			$(this).closest('tr').find('[class=saveImg]').attr('src', 'img/saveblue.png');
 	  }else{
             $(this).closest('tr').css('background', '');
@@ -451,42 +577,9 @@ $(".inputText").each(function() {
 			}
 	  });
 	  
-      $('.checkbox').each(function() {
-            //If there is at least one checkbox checked...
-            if(this.checked){
-                checkExists = true;
-            }
-        });
-      //Check if all checkboxes are checked
-        if ($('.checkbox:checked').length == $('.checkbox').length) {
-            allChecks = true;
-        }
-        if(checkExists){
-                $('.saveBtn').each(function() {
-                        this.disabled = false;
-                        $(this).css('background', '');
-                    });
-                if(allChecks){
-                    $('.selectall').each(function() {
-                        this.checked = true;
-                        this.indeterminate = false;
-                    });
-                }else{
-                    $('.selectall').each(function() {
-                        this.checked = true;
-                        this.indeterminate = true;
-                    });
-                }
-        }else{
-            $('.selectall').each(function() {
-                this.checked = false;
-                this.indeterminate = false;
-            });
-            $('.saveBtn').each(function() {
-                    this.disabled = true;
-                    $(this).css('background', 'gray');
-                });
-        }
+	  //Check for how check boxes look
+      $('.checkbox').trigger('change');
+	  
     });
  });
 
@@ -496,30 +589,48 @@ $('.selectall').on('click', function(event) {
 		$('.checkbox').each(function() {
 			this.checked = true;
 		});
-        $('.saveBtn').each(function() {
-                this.disabled = false;
-                $(this).css('background', '');
-            });
 		$('.selectall').each(function() {
 				this.checked = true;
 				this.indeterminate = false;
-			});
+		});
+        //All buttons enable
+        $('.saveBtn').each(function() {
+                this.disabled = false;
+                $(this).css('background', '');
+		});
+		$('.actBtn').each(function() {
+			this.disabled = false;
+			$(this).css('background', '');
+		});
+		$('.deactBtn').each(function() {
+			this.disabled = false;
+			$(this).css('background', '');
+		});
 	}else{
 		$('.checkbox').each(function() {
 			this.checked = false;                     
 		});
-        $('.saveBtn').each(function() {
-                this.disabled = true;
-                $(this).css('background', 'gray');
-            });
 		$('.selectall').each(function() {
                 this.checked = false;
                 this.indeterminate = false;
-            });   
+	    });   
+        //All buttons disable
+        $('.saveBtn').each(function() {
+                this.disabled = true;
+                $(this).css('background', 'gray');
+		});
+		$('.actBtn').each(function() {
+			this.disabled = true;
+			$(this).css('background', 'gray');
+		});
+		$('.deactBtn').each(function() {
+			this.disabled = true;
+			$(this).css('background', 'gray');
+		});
 	}
 });
 
-//Check for child checkboxes  that change and reflect it on the parent checkbox
+//Check for child check	boxes  that change and reflect it on the parent checkbox
 $('.checkbox').change(function(event) {
 	var checkExists = false;
 	var allChecks = false;
@@ -536,10 +647,20 @@ $('.checkbox').change(function(event) {
     }
 	
 	if(checkExists){
+		//All buttons enable
         $('.saveBtn').each(function() {
                 this.disabled = false;
                 $(this).css('background', '');
-            });
+		});
+		$('.actBtn').each(function() {
+			this.disabled = false;
+			$(this).css('background', '');
+		});
+		$('.deactBtn').each(function() {
+			this.disabled = false;
+			$(this).css('background', '');
+		});
+		//If all checkboxes are checked...
 		if(allChecks){
 			$('.selectall').each(function() {
 				this.checked = true;
@@ -557,12 +678,25 @@ $('.checkbox').change(function(event) {
 			this.checked = false;
 			this.indeterminate = false;
 		});
+		//All buttons disable
         $('.saveBtn').each(function() {
                 this.disabled = true;
                 $(this).css('background', 'gray');
-            });
+		});
+		$('.actBtn').each(function() {
+			this.disabled = true;
+			$(this).css('background', 'gray');
+		});
+		$('.deactBtn').each(function() {
+			this.disabled = true;
+			$(this).css('background', 'gray');
+		});
 	}
 });
+
+function getUserChange(){
+	return userChange;
+}
 
 function emulateUser(email_address,password,role,id){
     console.log("Redirecting!!!");
@@ -620,7 +754,7 @@ function uploadMachines(machineList){
     return data;
 }*/
 
-//This will save users with checked check boxes on the table
+//This newer version will save users with checked check boxes on the table
 function getTableContent() {
     var data = [];
     var table = $('#machines_table tbody tr');

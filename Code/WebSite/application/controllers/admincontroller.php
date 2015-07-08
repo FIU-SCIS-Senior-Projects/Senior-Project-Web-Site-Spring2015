@@ -725,7 +725,7 @@ class AdminController extends CI_Controller {
         
         if($input){/*input from User Management page*/
             $inputForm = json_decode($input);
-            /*bupass a user(s) if need be*/
+            /*bypass a user(s) if need be*/
             $this->getActiveUsersAndByPassIfNeeded($inputForm);
             /*update user info*/
             $success = $this->spw_user_model->updateUsers($inputForm);
@@ -740,7 +740,6 @@ class AdminController extends CI_Controller {
         }else{
             $data['title'] = 'User Management';
             $data['requests'] = $this->spw_user_model->getAllUsers();
-			//$data['requestRanks'] = $this->spw_user_model->getAllUserRanks();
             $data['fn'] = $fn;
             $data['ln'] = $ln;
             $data['email'] = $email;
