@@ -468,7 +468,7 @@ function uploadUser(machineList){
 
 $('.actBtn').click(function(){
 	alert("Clicked Activate Button!");
-	/*confirmMsg = 'You are about to activate checked users.\nIf you continue and there are unsaved changes unchecked, you will lose those changes.';
+	confirmMsg = 'You are about to activate checked users.\nIf you continue and there are unsaved changes unchecked, you will lose those changes.';
 	console.log("Clicked activate");
 	if(window.confirm(confirmMsg)){
 		clickedUserSave = true;
@@ -486,12 +486,12 @@ $('.actBtn').click(function(){
 		if(validInput){
 			uploadMachines(data);
 		}
-	}*/
+	}
 });
 
 $('.deactBtn').click(function(){
 	alert("Clicked Deactivate Button!");
-	/*confirmMsg = 'You are about to deactivate checked users.\nIf you continue and there are unsaved changes unchecked, you will lose those changes.';
+	confirmMsg = 'You are about to deactivate checked users.\nIf you continue and there are unsaved changes unchecked, you will lose those changes.';
 	console.log("Clicked deactivate");
 	if(window.confirm(confirmMsg)){
 		clickedUserSave = true;
@@ -509,7 +509,7 @@ $('.deactBtn').click(function(){
 		if(validInput){
 			uploadMachines(data);
 		}
-	}*/
+	}
 });
 
 $(window).bind("beforeunload", function (e) {
