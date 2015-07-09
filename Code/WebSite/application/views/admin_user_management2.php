@@ -199,6 +199,17 @@
 				echo("<button data-toggle=\"tooltip\" title=\"Save User\" class=\"saveUser\" href=\"\"
                         disabled=\"disabled\" style=\"border:0px; background-color:transparent\"> <img id=\"\" src=". 
                         base_url('img/savegray.png')." class=\"saveImg\" height=\"20\" width=\"20\"> </button>");
+						
+							if($request->status == "ACTIVE"){
+								echo("<button data-toggle=\"tooltip\" class=\"\" href=\"\"
+									disabled=\"disabled\" style=\"border:0px; background-color:transparent\"> <img id=\"\" src=". 
+									base_url('img/green_light.png')." class=\"\" height=\"20\" width=\"20\"> </button>");
+							}
+							if($request->status == "INACTIVE"){
+								echo("<button data-toggle=\"tooltip\" class=\"\" href=\"\"
+									disabled=\"disabled\" style=\"border:0px; background-color:transparent\"> <img id=\"\" src=". 
+									base_url('img/red_light.png')." class=\"\" height=\"20\" width=\"20\"> </button>");
+							}
 				echo $fn;
             ?>
                 </div>
@@ -467,7 +478,7 @@ function uploadUser(machineList){
 }
 
 $('.actBtn').click(function(){
-	alert("Clicked Activate Button!");
+	console.log("Clicked Activate Button!");
 	confirmMsg = 'You are about to activate checked users.\nIf you continue and there are unsaved changes unchecked, you will lose those changes.';
 	console.log("Clicked activate");
 	if(window.confirm(confirmMsg)){
@@ -490,7 +501,7 @@ $('.actBtn').click(function(){
 });
 
 $('.deactBtn').click(function(){
-	alert("Clicked Deactivate Button!");
+	console.log("Clicked Deactivate Button!");
 	confirmMsg = 'You are about to deactivate checked users.\nIf you continue and there are unsaved changes unchecked, you will lose those changes.';
 	console.log("Clicked deactivate");
 	if(window.confirm(confirmMsg)){
