@@ -187,10 +187,38 @@
 				</div>
 			</td>
             <td>
-                <div class="mg-top-20">
-            <?php
+				<?php 
+					
+				?>
+                <div class="mg-top-20" style="float:right">
+				<?php	
+					
                 $msg = "Are you sure you want to delete user $request->first_name $request->last_name ?";
                 $url = "id=$request->id&fn=$fn&ln=$ln&email=$email&role=$role&status=$status&linkedIn=$linkedIn&rank=$rank";
+				
+				//Light Icons
+				if($request->status == "ACTIVE"){
+					echo ("<div id=\"light\" style=\"float:left\">
+						<span id=\"red\" title=\"Deactivate\" class=\"redBtn\" ></span>
+						<span id=\"yellow\" title=\"Make Pending\" class=\"yellowBtn\" ></span>
+						<span id=\"green\" title=\"Activate\" class=\"active greenBtn\" ></span>
+					</div>");
+				}
+				elseif($request->status == "INACTIVE"){
+					echo ("<div id=\"light\" style=\"float:left\">
+						<span id=\"red\" title=\"Deactivate\" class=\"active redBtn\" ></span>
+						<span id=\"yellow\" title=\"Make Pending\" class=\"yellowBtn\" ></span>
+						<span id=\"green\" title=\"Activate\" class=\"greenBtn\" ></span>
+					</div>");
+				}
+				else{ //Status is PENDING
+					echo ("<div id=\"light\" style=\"float:left\">
+						<span id=\"red\" title=\"Deactivate\" class=\"redBtn\" ></span>
+						<span id=\"yellow\" title=\"Make Pending\" class=\"active yellowBtn\" ></span>
+						<span id=\"green\" title=\"Activate\" class=\"greenBtn\" ></span>
+					</div>");
+				}
+				
 				//Delete Icon
                 echo("<a data-toggle=\"tooltip\" title=\"Delete User\" href=".base_url('./userManagement?'.$url).
                         " onclick=\"return confirm('$msg')\"> <img id=\"\" src=".
@@ -200,16 +228,7 @@
                         disabled=\"disabled\" style=\"border:0px; background-color:transparent\"> <img id=\"\" src=". 
                         base_url('img/savegray.png')." class=\"saveImg\" height=\"20\" width=\"20\"> </button>");
 						
-							if($request->status == "ACTIVE"){
-								echo("<button data-toggle=\"tooltip\" class=\"\" href=\"\"
-									disabled=\"disabled\" style=\"border:0px; background-color:transparent\"> <img id=\"\" src=". 
-									base_url('img/green_light.png')." class=\"\" height=\"20\" width=\"20\"> </button>");
-							}
-							if($request->status == "INACTIVE"){
-								echo("<button data-toggle=\"tooltip\" class=\"\" href=\"\"
-									disabled=\"disabled\" style=\"border:0px; background-color:transparent\"> <img id=\"\" src=". 
-									base_url('img/red_light.png')." class=\"\" height=\"20\" width=\"20\"> </button>");
-							}
+							/**/
 				echo $fn;
             ?>
                 </div>
@@ -467,7 +486,7 @@ function uploadUser(machineList){
             console.log(response);
             if(response.success){
                 //show message when successful
-                alert("Upload Success!");
+                console.log("Upload Success!");
             }else{
                 //show message when not success
                 alert("Upload Failed");
@@ -485,7 +504,6 @@ $('.actBtn').click(function(){
 		clickedUserSave = true;
 		$('.checkbox').each(function() {
 			if(this.checked){
-				//var cur = $(this).closest('tr').find('[name=col_5]').val();
 				$(this).closest('tr').find('[name=col_5]').val('ACTIVE');
 			}
 		});
@@ -508,7 +526,6 @@ $('.deactBtn').click(function(){
 		clickedUserSave = true;
 		$('.checkbox').each(function() {
 			if(this.checked){
-				//var cur = $(this).closest('tr').find('[name=col_5]').val();
 				$(this).closest('tr').find('[name=col_5]').val('INACTIVE');
 			}
 		});
@@ -533,6 +550,104 @@ $(window).bind("beforeunload", function (e) {
 			return underfined;
 		}
 	}
+});
+
+//Red light
+$('.redBtn').on('click', function() {
+	$(this).addClass('active');
+	$('.saveStatus').trigger('change');
+			$(this)
+				.next()
+				.removeClass('active')
+				.next()
+				.removeClass('active');
+	$(this).closest('tr').find('[name=col_5]').val('INACTIVE');
+	$(this).closest('tr').find('[class=saveUser]').trigger('click');
+});
+
+//Yellow light
+$('.yellowBtn').on('click', function() {
+	$(this).addClass('active');
+	$('.saveStatus').trigger('change');
+			$(this)
+				.next()
+				.removeClass('active')
+				.parent()
+				.find('span:first')
+				.removeClass('active');
+	$(this).closest('tr').find('[name=col_5]').val('PENDING');
+	$(this).closest('tr').find('[class=saveUser]').trigger('click');
+});
+
+//Green light
+$('.greenBtn').on('click', function() {
+	$(this).addClass('active');
+			$(this)
+				.parent()
+				.find('span:first')
+				.removeClass('active')
+				.next()
+				.removeClass('active');
+	$(this).closest('tr').find('[name=col_5]').val('ACTIVE');
+	$(this).closest('tr').find('[class=saveUser]').trigger('click');
+				
+	/*var data = [];
+    var table = $('#machines_table tbody tr');
+	var id = $(this).closest('tr').find('[name="id"]').val();
+	var col_1 = (old_col_1.data('oldFn'));
+	var col_2 = (old_col_2.data('oldLn'));
+	var col_3 = (old_col_3.data('oldEmail'));
+	var col_4 = (old_col_4.data('oldRole'));
+	var col_5 = ($(this).closest('tr').find('[name=col_5]').val());
+			
+	var obj = {
+		"id":id,
+		"col_1":col_1,
+		"col_2":col_2,
+		"col_3":col_3,
+		"col_4":col_4,
+		"col_5":col_5
+	};
+	//data.push(obj);
+	console.log(obj);
+    console.log("machines: ");
+    console.log(data);
+
+		//Collect the new values of current row
+		var old_col_5 = ($(this).closest('tr').find('[name=col_5]'));
+		
+		//Save current values of elements
+		old_col_1.data('oldFn', old_col_1.val());
+		old_col_2.data('oldLn', old_col_2.val());
+		old_col_3.data('oldEmail', old_col_3.val());
+		old_col_4.data('oldRole', old_col_4.val());
+		old_col_5.data('oldStatus', old_col_5.val());
+		
+		//Attempt upload
+        //uploadUser(data);*/
+});
+
+$('.saveStatus').change(function(){
+    console.log("Clicked traffic icon");
+	var data = [];
+    var table = $('#machines_table tbody tr');
+	var col_5 = ($(this).closest('tr').find('[name=col_5]').val());
+			
+	var obj = {
+		"col_5":col_5
+	};
+	data.push(obj);
+    console.log("machines: ");
+    console.log(data);
+
+		//Collect the new values of current row
+		var old_col_5 = ($(this).closest('tr').find('[name=col_5]'));
+		
+		//Save current values of elements
+		old_col_5.data('oldStatus', old_col_5.val());
+		
+		//Attempt upload
+        uploadUser(data);
 });
 
 //Test to check for changed fields
