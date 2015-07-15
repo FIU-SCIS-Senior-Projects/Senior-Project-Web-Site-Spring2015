@@ -8,11 +8,12 @@
 <button id="submitRequests" type="button" class="btn btn-primary saveBtn" disabled="disabled" style="background-color:gray">Save</button>
 <button id="activateRequests" type="button" class="btn btn-primary actBtn" disabled="disabled" style="background-color:gray;margin-left:1em">Activate</button>
 <button id="deactivateRequests" type="button" class="btn btn-primary deactBtn" disabled="disabled" style="background-color:gray;margin-left:1em">Deactivate</button>
+<button id="deleteRequests" type="button" class="btn btn-primary delBtn" disabled="disabled" style="background-color:gray;margin-left:1em">Delete</button>
 <br> </br>
 <div id="machines">
 <div class="machine col-md-12">
 
-<table class="table table-bordered" id="machines_table"  onunload="checkSave()" >
+<table class="table table-bordered" id="machines_table"  >
     <thead>
 		<tr></tr>
         <tr>
@@ -26,14 +27,15 @@
                 <input id="ln" class="input-small text-filter ln" type="text" value="<?php echo $ln ?>">
             </th>
             <th>
-                <input id="email" class="input-medium text-filter email" type="text" value="<?php echo $email ?>">
+                <input id="email" class="input-medium text-filter email" style="width:125px" type="text" value="<?php echo $email ?>">
             </th>
             <th>
-                <select class="field-custom dropdown role" id="role">
+                <select  class="field-custom dropdown role" id="role">
                   <?php echo '<option '.($role==='ALL ROLES'?'selected="selected"':'').' value="ALL ROLES">ALL ROLES</option>'; ?>
                   <?php echo '<option '.($role==='STUDENT'?'selected="selected"':'').' value="STUDENT">STUDENT</option>'; ?>
                   <?php echo '<option '.($role==='PROFESSOR'?'selected="selected"':'').'value="PROFESSOR">PROFESSOR</option>'; ?>
                   <?php echo '<option '.($role==='HEAD'?'selected="selected"':'').' value="HEAD">HEAD</option>'; ?>
+                  <option style="display:none;" value="">______________________</option>'; <!--For spacing purposes-->
                 </select>
             </th>
             <th>
@@ -42,6 +44,7 @@
                   <?php echo '<option '.($status==='INACTIVE'?'selected="selected"':'').' value="INACTIVE">INACTIVE</option>'; ?>
                   <?php echo '<option '.($status==='PENDING'?'selected="selected"':'').'value="PENDING">PENDING</option>'; ?>
                   <?php echo '<option '.($status==='ACTIVE'?'selected="selected"':'').' value="ACTIVE">ACTIVE</option>'; ?>
+                  <option style="display:none;" value="">____________________</option>; <!--For spacing purposes-->
                 </select>
             </th>
 			<th>
@@ -60,13 +63,14 @@
 				  <?php echo '<option '.($rank==='ALL'?'selected="selected"':'').' value="ALL">ALL</option>'; ?>
                   <?php echo '<option '.($rank==='YES'?'selected="selected"':'').' value="YES">YES</option>'; ?>
                   <?php echo '<option '.($rank==='NO'?'selected="selected"':'').' value="NO">NO</option>'; ?>
+                  <option style="display:none;" value="">___________</option>; <!--For spacing purposes-->
 			</th>
 			<th></th>
             <!-- end filters -->
         </tr>
         <tr>
             <th style="display:none;">Id No.</th>
-            <th> <input name="selectall" type="checkbox" id="selectall" class="selectall" /> <div id="checkBoxList"> </th>
+            <th> <input name="selectall" type="checkbox" id="selectall" class="selectall" /> </th>
             <th>Picture</th>
             <th>First Name</th>
             <th>Last Name</th>
@@ -101,7 +105,7 @@
                 <input id="col_2" name="col_2" class="input-small mg-top-20 inputText" type="text" value="<?php echo $request->last_name ?>">
             </td>
             <td>
-                <input id="col_3" name="col_3" class="input-medium mg-top-20 inputText" type="text" value="<?php echo $request->email ?>">
+                <input id="col_3" name="col_3" class="input-medium mg-top-20 inputText" style="width:125px" type="text" value="<?php echo $request->email ?>">
             </td>
             <td>
                 <select name="col_4" class="field-custom mg-top-20 inputText" id="col_4">
@@ -190,7 +194,7 @@
 				<?php 
 					
 				?>
-                <div class="mg-top-20" style="float:right">
+                <div class="mg-top-20" style="width:52px">
 				<?php	
 					
                 $msg = "Are you sure you want to delete user $request->first_name $request->last_name ?";
@@ -212,7 +216,7 @@
 					</div>");
 				}
 				else{ //Status is PENDING
-					echo ("<div id=\"light\" style=\"float:left\">
+					echo ("<div id=\"light\" style=\"float:left;margin-right:5px\">
 						<span id=\"red\" title=\"Deactivate\" class=\"redBtn\" ></span>
 						<span id=\"yellow\" title=\"Make Pending\" class=\"active yellowBtn\" ></span>
 						<span id=\"green\" title=\"Activate\" class=\"greenBtn\" ></span>
@@ -221,12 +225,12 @@
 				
 				//Delete Icon
                 echo("<a data-toggle=\"tooltip\" title=\"Delete User\" href=".base_url('./userManagement?'.$url).
-                        " onclick=\"return confirm('$msg')\"> <img id=\"\" src=".
-                        base_url('img/deletered.png')." height=\"20\" width=\"20\" > </a>");
+                        " onclick=\"return confirm('$msg')\" style=\"margin-left:6px\"> <img id=\"\" src=".
+                        base_url('img/deletered.png')." height=\"20\" width=\"20\" style=\"\" > </a>");
 				//Save Icon
-				echo("<button data-toggle=\"tooltip\" title=\"Save User\" class=\"saveUser\" href=\"\"
-                        disabled=\"disabled\" style=\"border:0px; background-color:transparent\"> <img id=\"\" src=". 
-                        base_url('img/savegray.png')." class=\"saveImg\" height=\"20\" width=\"20\"> </button>");
+				echo("<button data-toggle=\"tooltip\" title=\"Save User\" class=\"saveUser\" 
+                        disabled=\"disabled\" style=\"border:0px; background-color:transparent; float:right;\"> <img id=\"\" src=". 
+                        base_url('img/savegray.png')." class=\"saveImg\" height=\"20\" width=\"20\" > </button>");
 						
 							/**/
 				echo $fn;
@@ -240,7 +244,7 @@
         <thead>
             <tr>
                 <th style="display:none;">Id No.</th>
-                <th> <input name="selectall" type="checkbox" id="selectall" class="selectall" /> <div id="checkBoxList"> </th>
+                <th> <input name="selectall" type="checkbox" id="selectall" class="selectall" /> </th>
                 <th>Picture</th>
                 <th>First Name</th>
                 <th>Last Name</th>
@@ -263,7 +267,7 @@
                     <input id="ln2" class="input-small text-filter ln" type="text" value="<?php echo $ln ?>">
                 </th>
                 <th>
-                    <input id="email2" class="input-medium text-filter email" type="text" value="<?php echo $email ?>">
+                    <input id="email2" class="input-medium text-filter email" style="width:125px" type="text" value="<?php echo $email ?>">
                 </th>
                 <th>
                     <select class="field-custom dropdown role" id="role2">
@@ -307,6 +311,7 @@
 <button id="submitRequests" type="button" class="btn btn-primary saveBtn" disabled="disabled" style="background-color:gray">Save</button>
 <button id="activateRequests" type="button" class="btn btn-primary actBtn" disabled="disabled" style="background-color:gray;margin-left:1em">Activate</button>
 <button id="deactivateRequests" type="button" class="btn btn-primary deactBtn" disabled="disabled" style="background-color:gray;margin-left:1em">Deactivate</button>
+<button id="deleteRequests" type="button" class="btn btn-primary delBtn" disabled="disabled" style="background-color:gray;margin-left:1em">Delete</button>
 </div>
 <script type="text/javascript">
 //Local variables to check for form change in the table
@@ -540,6 +545,10 @@ $('.deactBtn').click(function(){
 	}
 });
 
+$('.delBtn').click(function(){
+	alert("Delete button clicked! \n\n Work still in progress!");
+});
+
 $(window).bind("beforeunload", function (e) {
 	var confirmMsg = 'You have unsaved changes \nIf you leave before saving, you will lose changes made.';
 	if(!(clickedUserSave)){
@@ -554,8 +563,8 @@ $(window).bind("beforeunload", function (e) {
 
 //Red light
 $('.redBtn').on('click', function() {
+	//Light red on, light off others
 	$(this).addClass('active');
-	$('.saveStatus').trigger('change');
 			$(this)
 				.next()
 				.removeClass('active')
@@ -567,8 +576,8 @@ $('.redBtn').on('click', function() {
 
 //Yellow light
 $('.yellowBtn').on('click', function() {
+	//Light yellow on, turn of others
 	$(this).addClass('active');
-	$('.saveStatus').trigger('change');
 			$(this)
 				.next()
 				.removeClass('active')
@@ -581,6 +590,7 @@ $('.yellowBtn').on('click', function() {
 
 //Green light
 $('.greenBtn').on('click', function() {
+	//Light green on, turn off others
 	$(this).addClass('active');
 			$(this)
 				.parent()
@@ -627,28 +637,6 @@ $('.greenBtn').on('click', function() {
         //uploadUser(data);*/
 });
 
-$('.saveStatus').change(function(){
-    console.log("Clicked traffic icon");
-	var data = [];
-    var table = $('#machines_table tbody tr');
-	var col_5 = ($(this).closest('tr').find('[name=col_5]').val());
-			
-	var obj = {
-		"col_5":col_5
-	};
-	data.push(obj);
-    console.log("machines: ");
-    console.log(data);
-
-		//Collect the new values of current row
-		var old_col_5 = ($(this).closest('tr').find('[name=col_5]'));
-		
-		//Save current values of elements
-		old_col_5.data('oldStatus', old_col_5.val());
-		
-		//Attempt upload
-        uploadUser(data);
-});
 
 //Test to check for changed fields
 $(".inputText").each(function() {
@@ -732,6 +720,10 @@ $('.selectall').on('click', function(event) {
 			this.disabled = false;
 			$(this).css('background', '');
 		});
+		$('.delBtn').each(function() {
+			this.disabled = false;
+			$(this).css('background', '');
+		});
 	}else{
 		$('.checkbox').each(function() {
 			this.checked = false;                     
@@ -750,6 +742,10 @@ $('.selectall').on('click', function(event) {
 			$(this).css('background', 'gray');
 		});
 		$('.deactBtn').each(function() {
+			this.disabled = true;
+			$(this).css('background', 'gray');
+		});
+		$('.delBtn').each(function() {
 			this.disabled = true;
 			$(this).css('background', 'gray');
 		});
@@ -786,6 +782,10 @@ $('.checkbox').change(function(event) {
 			this.disabled = false;
 			$(this).css('background', '');
 		});
+		$('.delBtn').each(function() {
+			this.disabled = false;
+			$(this).css('background', '');
+		});
 		//If all checkboxes are checked...
 		if(allChecks){
 			$('.selectall').each(function() {
@@ -814,6 +814,10 @@ $('.checkbox').change(function(event) {
 			$(this).css('background', 'gray');
 		});
 		$('.deactBtn').each(function() {
+			this.disabled = true;
+			$(this).css('background', 'gray');
+		});
+		$('.delBtn').each(function() {
 			this.disabled = true;
 			$(this).css('background', 'gray');
 		});

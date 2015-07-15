@@ -27,6 +27,7 @@ body {
 
 #machines_table >thead{
     background-color: #D0D0D0;
+	
 }
 
 #machines_table > thead > tr > th,
@@ -402,6 +403,7 @@ span.inline
 	box-shadow: 0 0 5px rgba(0,0,0, .8);
     overflow: hidden;
 	margin: 0;
+	margin-top: 3px;
     padding: 0 0 4px;
     width: 15px;
 }
@@ -409,7 +411,7 @@ span.inline
 #light span {
     border-radius: 25px;
     display: block;
-    height: 11px;
+    height: 9.5px;
     margin: 2px auto 0;
     opacity: .4;
     width: 7.5px;
