@@ -1,5 +1,10 @@
 <?php $this->load->view("template_header"); ?>
 <script src="<?php echo base_url() ?>js/jquery.redirect.js"></script>
+<!-- added scripts for JQuery Accordion -->
+<script src="<?php echo base_url() ?>js/jquery-accordion.js"></script>
+<script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
+<script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>
+
 <h3>User Management</h3>
 
 
@@ -84,7 +89,7 @@
     </thead>
     <tbody>
         <?php foreach($requests as $request):?>
-        <tr class="rows" id="userRow_<?php echo $request->id ?>" onClick="specialCase(<?php echo $request->id ?>)">
+        <tr class="rows" id="userRow_<?php echo $request->id ?>" name="userCheck" onClick="specialCase(<?php echo $request->id ?>)">
             <td style="display:none;">
                 <select id="idRow_<?php echo $request->id ?>" class="field-custom idRow" name="id">
                     <?php echo '<option>'.$request->id.'</option>'?>
@@ -138,7 +143,7 @@
                 </select>
             </td>
 			<td> 
-				<div class="mg-top-20" >
+				<div name="col_6" class="mg-top-20" >
 				<?php
 					//if ($request->headline_linkedIn == NULL){echo "NO";} else {echo "YES";}
 								$linkedIn = true;
@@ -174,7 +179,7 @@
 				
 			</td>
 			<td>
-				<div class="mg-top-20" > 
+				<div name="col_7" class="mg-top-20" > 
 				<?php
 					$min = $this->spw_match_model->getMinimum();
 					if($request->rank >= $min)
@@ -191,50 +196,43 @@
 				</div>
 			</td>
             <td>
-				<?php 
-					
-				?>
                 <div class="mg-top-20" style="width:52px">
 				<?php	
+					//Light Icons
+					if($request->status == "ACTIVE"){
+						echo ("<div id=\"light\" style=\"float:left\">
+							<span id=\"red\" title=\"Deactivate\" class=\"redBtn\" ></span>
+							<span id=\"yellow\" title=\"Make Pending\" class=\"yellowBtn\" ></span>
+							<span id=\"green\" title=\"Activate\" class=\"active greenBtn\" ></span>
+						</div>");
+					}
+					elseif($request->status == "INACTIVE"){
+						echo ("<div id=\"light\" style=\"float:left\">
+							<span id=\"red\" title=\"Deactivate\" class=\"active redBtn\" ></span>
+							<span id=\"yellow\" title=\"Make Pending\" class=\"yellowBtn\" ></span>
+							<span id=\"green\" title=\"Activate\" class=\"greenBtn\" ></span>
+						</div>");
+					}
+					else{ //Status is PENDING
+						echo ("<div id=\"light\" style=\"float:left\">
+							<span id=\"red\" title=\"Deactivate\" class=\"redBtn\" ></span>
+							<span id=\"yellow\" title=\"Make Pending\" class=\"active yellowBtn\" ></span>
+							<span id=\"green\" title=\"Activate\" class=\"greenBtn\" ></span>
+						</div>");
+					}
 					
-                $msg = "Are you sure you want to delete user $request->first_name $request->last_name ?";
-                $url = "id=$request->id&fn=$fn&ln=$ln&email=$email&role=$role&status=$status&linkedIn=$linkedIn&rank=$rank";
-				
-				//Light Icons
-				if($request->status == "ACTIVE"){
-					echo ("<div id=\"light\" style=\"float:left\">
-						<span id=\"red\" title=\"Deactivate\" class=\"redBtn\" ></span>
-						<span id=\"yellow\" title=\"Make Pending\" class=\"yellowBtn\" ></span>
-						<span id=\"green\" title=\"Activate\" class=\"active greenBtn\" ></span>
-					</div>");
-				}
-				elseif($request->status == "INACTIVE"){
-					echo ("<div id=\"light\" style=\"float:left\">
-						<span id=\"red\" title=\"Deactivate\" class=\"active redBtn\" ></span>
-						<span id=\"yellow\" title=\"Make Pending\" class=\"yellowBtn\" ></span>
-						<span id=\"green\" title=\"Activate\" class=\"greenBtn\" ></span>
-					</div>");
-				}
-				else{ //Status is PENDING
-					echo ("<div id=\"light\" style=\"float:left;margin-right:5px\">
-						<span id=\"red\" title=\"Deactivate\" class=\"redBtn\" ></span>
-						<span id=\"yellow\" title=\"Make Pending\" class=\"active yellowBtn\" ></span>
-						<span id=\"green\" title=\"Activate\" class=\"greenBtn\" ></span>
-					</div>");
-				}
-				
-				//Delete Icon
-                echo("<a data-toggle=\"tooltip\" title=\"Delete User\" href=".base_url('./userManagement?'.$url).
-                        " onclick=\"return confirm('$msg')\" style=\"margin-left:6px\"> <img id=\"\" src=".
-                        base_url('img/deletered.png')." height=\"20\" width=\"20\" style=\"\" > </a>");
-				//Save Icon
-				echo("<button data-toggle=\"tooltip\" title=\"Save User\" class=\"saveUser\" 
-                        disabled=\"disabled\" style=\"border:0px; background-color:transparent; float:right;\"> <img id=\"\" src=". 
-                        base_url('img/savegray.png')." class=\"saveImg\" height=\"20\" width=\"20\" > </button>");
-						
-							/**/
-				echo $fn;
-            ?>
+					$msg = "Are you sure you want to delete user $request->first_name $request->last_name ?";
+					$url = "id=$request->id&fn=$fn&ln=$ln&email=$email&role=$role&status=$status&linkedIn=$linkedIn&rank=$rank";
+					
+					//Delete Icon
+					echo("<a data-toggle=\"tooltip\" title=\"Delete User\" class=\"deleteUser\" href=".base_url('./userManagement?'.$url).
+							" onclick=\"return confirm('$msg')\" style=\"margin-left:5px\"> <img id=\"\" src=".
+							base_url('img/deletered.png')." height=\"20\" width=\"20\" > </a>");
+					//Save Icon
+					echo("<button data-toggle=\"tooltip\" title=\"Save User\" class=\"saveUser\" 
+							disabled=\"disabled\" style=\"border:0px; background-color:transparent; float:right;\"> <img id=\"\" src=". 
+							base_url('img/savegray.png')." class=\"saveImg\" height=\"20\" width=\"20\" > </button>");
+				?>
                 </div>
             </td>
         </tr>
@@ -313,11 +311,70 @@
 <button id="deactivateRequests" type="button" class="btn btn-primary deactBtn" disabled="disabled" style="background-color:gray;margin-left:1em">Deactivate</button>
 <button id="deleteRequests" type="button" class="btn btn-primary delBtn" disabled="disabled" style="background-color:gray;margin-left:1em">Delete</button>
 </div>
+<br></br>
+
+<div class="well">
+<div id="accordion">
+	<h3>Email Notification</h3>
+		<?php
+					
+		  $query_msg_notif = $this->db->query( 'SELECT intro FROM email_template WHERE id = "NOTIFICATION"' );
+		  foreach( $query_msg_notif->result_array( ) as $row )
+		  {
+			$msg_stud = $row[ 'intro' ];
+		  }
+
+		  //$unique_link = $this->input->post( 'unique_link' );
+		  $message =' <html>
+		  <head><title></title></head>
+		  <body>
+		  <h4>Dear User </h4>
+		  <p>It seems that you are still in need to complete your initial tasks.</p>
+		  <p>Please make sure you have your linked in profile synchronized and your minimum ranking completed.</p>
+		  
+		  </body>
+		  </html>';
+		?>
+		<div><p>
+		<p>This is a display for the email template for notifications to users.</p>
+		<?php
+		  //echo form_open( 'admin/change_invitation/NOTIFICATION', array( 'class' => 'form-inline', 'id' => 'notification_email' ) );
+		  echo( "<div style='padding-bottom: 10px;'>" );
+		  echo form_textarea( array(
+									'id' => 'notification_text',
+									'name' => 'notification_text',
+									'value' => $msg_stud,
+									'style' => "margin-left: 1px; margin-right: 7px; width: 600px;",
+									'title' => 'Notification' ) );
+		  echo( "</div>" );
+		  echo( "<div>" );
+		 // echo form_hidden( array( 'role' => 'STUDENT' ) );
+		  /*echo form_submit( array(
+								  'id' => 'email-btn',
+								  'name' => 'email btn',
+								  'class' => 'btn emailBtn',
+								  'value' => 'Send email' , 
+								  'disabled' => true,
+								  'style' => 'background-color:gray') );*/
+		  echo("<button id=\"email-btn\" name=\"email btn\" class=\"btn emailBtn\" disabled=\"disabled\" style=\"background-color:gray\">Send Email</button>");
+		  echo( "</div>" );
+		  //echo form_close( );
+		  
+		  //$fname = $_POST['fname'];
+		  //$lname = $_POST['lname'];
+		  //$email = $_POST['email'];
+		  
+		  //mail($email, "Dear ".$fname." ".$lname, "THANKS!");
+		  
+		?>
+		</p></div>
+</div>
+</div>
+
 <script type="text/javascript">
 //Local variables to check for form change in the table
 var hasChange = false;
 var clickedUserSave = false;
-var userChange = false;
 var confirmMsg = '';
 //These are used to collect new changes when user icon is clicked
 var old_col_1;
@@ -440,7 +497,6 @@ $('.saveUser').click(function(){
     console.log(data);
 
     if(validInput){
-		userChange = true;
 		//Display changes when successful
 		$(this).closest('tr').css('background', '');
 		$(this).closest('tr').find('[type=checkbox]').prop('checked', false);
@@ -546,7 +602,121 @@ $('.deactBtn').click(function(){
 });
 
 $('.delBtn').click(function(){
-	alert("Delete button clicked! \n\n Work still in progress!");
+	//alert("Delete button clicked! \n\n Work still in progress!");
+	confirmMsg = 'You are about to delete checked users.\nIf you continue and there are unsaved changes unchecked, you will lose those changes.';
+	confirmMsg += '\n\n Are you sure you want to delete users?';
+	console.log("Clicked delete");
+	if(window.confirm(confirmMsg)){
+		clickedUserSave = true;
+		$('.checkbox').each(function() {
+			if(this.checked){
+				// var user_id = $(this).closest('tr').find('[name="id"]').val();
+				// $this->spw_user_model->delete_user(user_id)
+			}
+		});
+		var data = getTableContent();
+		var validInput = isValidInput(data);
+		console.log("machines: ");
+		console.log(data);
+
+		if(validInput){
+			deleteRequests(data);
+		}
+	}
+});
+
+//This took a while but it was done, it deletes checked users
+//Note that this can display an error but still deletes users.
+function deleteRequests(machineList){
+	var msg = "";
+    var url = "";
+    console.log(url);
+    console.log(JSON.stringify(machineList));
+	$('.checkbox').each(function() {
+		if(this.checked){
+			var id = $(this).closest('tr').find('[name="id"]').val();
+			var col_1 = ($(this).closest('tr').find('[name=col_1]').val()); //first_name
+			var col_2 = ($(this).closest('tr').find('[name=col_2]').val()); //last_name
+			var col_3 = ($(this).closest('tr').find('[name=col_3]').val()); //email
+			var col_4 = ($(this).closest('tr').find('[name=col_4]').val()); //role
+			var col_5 = ($(this).closest('tr').find('[name=col_5]').val()); //status
+			var col_6 = ($(this).closest('tr').find('[name=col_6]').val());	//linkedIn
+			var col_7 = ($(this).closest('tr').find('[name=col_7]').val()); //rank
+			url = "./userManagement?id="+id+"&fn="+col_1+"&ln="+col_2+"&email="+col_3+"&role="+col_4+"&status="+col_5+"&linkedIn="+col_6+"&rank="+col_7;
+			console.log(url);
+			$.ajax({
+				type: "POST",
+				url: url,
+				//data: JSON.stringify(machineList),
+				dataType: "json",
+				success: function(response){
+					console.log("response");
+					console.log(response);
+					if(response.success){
+						//show success message
+						console.log("Success on deleting users");
+					}else{
+						//show message when not success
+						alert("User deletion failed");
+						
+					}
+				}
+			});
+			
+		}
+	});	
+	location.reload();
+}
+
+$('.greenBtn').on('click', function() {
+	//Light green on, turn off others
+	$(this).addClass('active');
+			$(this)
+				.parent()
+				.find('span:first')
+				.removeClass('active')
+				.next()
+				.removeClass('active');
+	$(this).closest('tr').find('[name=col_5]').val('ACTIVE');
+	$(this).closest('tr').find('[class=saveUser]').trigger('click');
+});
+
+$(document).ready(function() {
+	$('.emailBtn').on('click', function() {
+		alert("Email button clicked!");
+		var fname;
+		var lname;
+		var email;
+		var varData; //used to get the variables
+		$('.checkbox').each(function() {
+			if(this.checked){
+				fname = ($(this).closest('tr').find('[name=col_1]').val());	//First name
+				lname = ($(this).closest('tr').find('[name=col_2]').val()); //Last name
+				email = ($(this).closest('tr').find('[name=col_3]').val()); //email
+				varData = 'fname='+fname+'lname='+lname+'&email='+email;
+				console.log(varData);
+				//$.post('email.php', { email: $(this).closest('tr').find('[name=col_3]').val() });
+				$.ajax({
+					type: "POST",
+					url: 'email.php',
+					data: varData,
+					dataType: "text",
+					success: function(response){
+						console.log("response");
+						console.log(response);
+						if(response.success){
+							//show success message
+							alert("Email was a success");
+						}else{
+							//show message when not success
+							alert("Email sending failed");
+							
+						}
+					}
+				});
+			}
+		});	
+	});
 });
 
 $(window).bind("beforeunload", function (e) {
@@ -600,43 +770,7 @@ $('.greenBtn').on('click', function() {
 				.removeClass('active');
 	$(this).closest('tr').find('[name=col_5]').val('ACTIVE');
 	$(this).closest('tr').find('[class=saveUser]').trigger('click');
-				
-	/*var data = [];
-    var table = $('#machines_table tbody tr');
-	var id = $(this).closest('tr').find('[name="id"]').val();
-	var col_1 = (old_col_1.data('oldFn'));
-	var col_2 = (old_col_2.data('oldLn'));
-	var col_3 = (old_col_3.data('oldEmail'));
-	var col_4 = (old_col_4.data('oldRole'));
-	var col_5 = ($(this).closest('tr').find('[name=col_5]').val());
-			
-	var obj = {
-		"id":id,
-		"col_1":col_1,
-		"col_2":col_2,
-		"col_3":col_3,
-		"col_4":col_4,
-		"col_5":col_5
-	};
-	//data.push(obj);
-	console.log(obj);
-    console.log("machines: ");
-    console.log(data);
-
-		//Collect the new values of current row
-		var old_col_5 = ($(this).closest('tr').find('[name=col_5]'));
-		
-		//Save current values of elements
-		old_col_1.data('oldFn', old_col_1.val());
-		old_col_2.data('oldLn', old_col_2.val());
-		old_col_3.data('oldEmail', old_col_3.val());
-		old_col_4.data('oldRole', old_col_4.val());
-		old_col_5.data('oldStatus', old_col_5.val());
-		
-		//Attempt upload
-        //uploadUser(data);*/
 });
-
 
 //Test to check for changed fields
 $(".inputText").each(function() {
@@ -657,7 +791,6 @@ $(".inputText").each(function() {
     // Look for changes in the value
     $(this).bind("propertychange change click keyup input paste", function(event){
 		hasChange = false;
-		console.log(getUserChange());
 
         var col_1 = ($(this).closest('tr').find('[name=col_1]').val());
         var col_2 = ($(this).closest('tr').find('[name=col_2]').val());
@@ -724,6 +857,11 @@ $('.selectall').on('click', function(event) {
 			this.disabled = false;
 			$(this).css('background', '');
 		});
+		$('.emailBtn').each(function() {
+			this.disabled = false;
+			$(this).css('background', '');
+		});
+		
 	}else{
 		$('.checkbox').each(function() {
 			this.checked = false;                     
@@ -746,6 +884,10 @@ $('.selectall').on('click', function(event) {
 			$(this).css('background', 'gray');
 		});
 		$('.delBtn').each(function() {
+			this.disabled = true;
+			$(this).css('background', 'gray');
+		});
+		$('.emailBtn').each(function() {
 			this.disabled = true;
 			$(this).css('background', 'gray');
 		});
@@ -786,6 +928,10 @@ $('.checkbox').change(function(event) {
 			this.disabled = false;
 			$(this).css('background', '');
 		});
+		$('.emailBtn').each(function() {
+			this.disabled = false;
+			$(this).css('background', '');
+		});
 		//If all checkboxes are checked...
 		if(allChecks){
 			$('.selectall').each(function() {
@@ -821,12 +967,12 @@ $('.checkbox').change(function(event) {
 			this.disabled = true;
 			$(this).css('background', 'gray');
 		});
+		$('.emailBtn').each(function() {
+			this.disabled = true;
+			$(this).css('background', 'gray');
+		});
 	}
 });
-
-function getUserChange(){
-	return userChange;
-}
 
 function emulateUser(email_address,password,role,id){
     console.log("Redirecting!!!");

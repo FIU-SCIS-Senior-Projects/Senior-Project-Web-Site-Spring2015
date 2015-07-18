@@ -669,7 +669,7 @@ class AdminController extends CI_Controller {
         $s_url = $this->config->item('fiu_api_refresh');
         $jason_return = file_get_contents($s_url);
         if ($jason_return == 'OK') {
-            setFlashMessage($this, "Succesfully update from API");
+            setFlashMessage($this, "Successfully update from API");
         } else {
             setErrorFlashMessage($this, "There was an error on the API. Please verify the server.");
         }
@@ -687,7 +687,7 @@ class AdminController extends CI_Controller {
             $name = $this->input->post('full_name');
             $default_email = $this->input->post('email_address');
             $this->spw_vm_request_model->setEmailToDefault($name,$default_email);
-            setFlashMessage($this, "Succesfully set name $name and email $default_email");
+            setFlashMessage($this, "Successfully set name $name and email $default_email");
         }
         redirect('admin/admin_dashboard');
     }
@@ -869,7 +869,6 @@ class AdminController extends CI_Controller {
 //		echo $where . "<br>" . $rank;
         $data['title'] = 'User Management';
         $data['requests'] = $this->spw_user_model->searchFilteredUsers($where, $rank);
-		//$data['requestRanks'] = $this->spw_user_model->searchFilteredUserRanks($having);
         $data['fn'] = $fn;
         $data['ln'] = $ln;
         $data['email'] = $email;
@@ -883,7 +882,7 @@ class AdminController extends CI_Controller {
     public function deleteUser($user_id, $fn, $ln, $email, $status, $role, $linkedIn, $rank){
         $msg = "";
         if($this->spw_user_model->delete_user($user_id)){
-            $msg = "Succesfully deleted user ";
+            $msg = "Successfully deleted user ";
         }else{
             $msg = "Error deleting user";
         }
