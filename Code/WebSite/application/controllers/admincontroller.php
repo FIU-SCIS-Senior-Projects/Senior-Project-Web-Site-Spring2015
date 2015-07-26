@@ -117,7 +117,7 @@ class AdminController extends CI_Controller {
 		$role = $this->input->post( 'role' );
 		$id = $this->input->post( 'id' );
 
-		if( $role == 'STUDENT')
+		if( $role == 'STUDENT' || $role == 'PROFESSOR')
 		{ 
 		  $sess_array = array( 
 			  'id' => $id,

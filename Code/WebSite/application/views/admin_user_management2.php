@@ -459,13 +459,13 @@ $('.saveBtn').click(function(){
 	confirmMsg = 'You are about to save checked users.\nIf you continue and there are unsaved changes unchecked, you will lose those changes.';
 	console.log("Clicked save");
 	if(window.confirm(confirmMsg)){
-		clickedUserSave = true;
 		var data = getTableContent();
 		var validInput = isValidInput(data);
 		console.log("machines: ");
 		console.log(data);
 
 		if(validInput){
+			clickedUserSave = true;
 			uploadMachines(data);
 		}
 	}
@@ -562,7 +562,6 @@ $('.actBtn').click(function(){
 	confirmMsg = 'You are about to activate checked users.\nIf you continue and there are unsaved changes unchecked, you will lose those changes.';
 	console.log("Clicked activate");
 	if(window.confirm(confirmMsg)){
-		clickedUserSave = true;
 		$('.checkbox').each(function() {
 			if(this.checked){
 				$(this).closest('tr').find('[name=col_5]').val('ACTIVE');
@@ -574,6 +573,7 @@ $('.actBtn').click(function(){
 		console.log(data);
 
 		if(validInput){
+			clickedUserSave = true;
 			uploadMachines(data);
 		}
 	}
@@ -584,7 +584,6 @@ $('.deactBtn').click(function(){
 	confirmMsg = 'You are about to deactivate checked users.\nIf you continue and there are unsaved changes unchecked, you will lose those changes.';
 	console.log("Clicked deactivate");
 	if(window.confirm(confirmMsg)){
-		clickedUserSave = true;
 		$('.checkbox').each(function() {
 			if(this.checked){
 				$(this).closest('tr').find('[name=col_5]').val('INACTIVE');
@@ -596,6 +595,7 @@ $('.deactBtn').click(function(){
 		console.log(data);
 
 		if(validInput){
+			clickedUserSave = true;
 			uploadMachines(data);
 		}
 	}
@@ -607,7 +607,6 @@ $('.delBtn').click(function(){
 	confirmMsg += '\n\n Are you sure you want to delete users?';
 	console.log("Clicked delete");
 	if(window.confirm(confirmMsg)){
-		clickedUserSave = true;
 		$('.checkbox').each(function() {
 			if(this.checked){
 				// var user_id = $(this).closest('tr').find('[name="id"]').val();
@@ -620,6 +619,7 @@ $('.delBtn').click(function(){
 		console.log(data);
 
 		if(validInput){
+			clickedUserSave = true;
 			deleteRequests(data);
 		}
 	}
@@ -668,19 +668,6 @@ function deleteRequests(machineList){
 	location.reload();
 }
 
-$('.greenBtn').on('click', function() {
-	//Light green on, turn off others
-	$(this).addClass('active');
-			$(this)
-				.parent()
-				.find('span:first')
-				.removeClass('active')
-				.next()
-				.removeClass('active');
-	$(this).closest('tr').find('[name=col_5]').val('ACTIVE');
-	$(this).closest('tr').find('[class=saveUser]').trigger('click');
-});
-
 $(document).ready(function() {
 	$('.emailBtn').on('click', function() {
 		alert("Email button clicked!");
@@ -726,7 +713,7 @@ $(window).bind("beforeunload", function (e) {
 			window.confirm = confirmMsg;
 			return confirmMsg;
 		}else{
-			return underfined;
+			return undefined;
 		}
 	}
 });

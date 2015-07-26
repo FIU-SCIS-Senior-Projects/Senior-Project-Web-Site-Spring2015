@@ -13,15 +13,18 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <title></title>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
-
 
 		<script>
 		
+		//$(document).ready(function()
+		//{
+		//	$(".pd3").draggable();
+		//});			
 					
 		$(document).ready(function()
 		{
-				
 		 
 		/*$('#studentPop').click(function()
 				{
@@ -37,9 +40,10 @@ and open the template in the editor.
 		 
 		 
 		
+				//$("div.pd3").draggable();
 			
 
-			 $( "div.pd3" ).hover(
+			 $( "div.pd3" ).hover( 
 			function() {
 			$( this ).addClass( "sel" );
 			}, function() {
@@ -67,8 +71,8 @@ and open the template in the editor.
 				trigger: 'click',
 				html:true,  
 				content: function() {
-    return $(this).next(".uMs").html();
-}
+				return $(this).next(".uMs").html();
+				}
 			});
 			//popover 3 -skills in 
 				$('[data-toggle="unMatchedInterest"]').popover({
@@ -281,6 +285,7 @@ and open the template in the editor.
 					
         </style>
         <script>
+		
 		
 		function MyFunction()
 		{
@@ -499,6 +504,7 @@ and open the template in the editor.
 			
 			echo "<div id = 'test'>";
 			echo "Test</br>";
+			
 	
 			//echo "<div id='draggable'>";
 		//	echo"</div>";
@@ -514,7 +520,15 @@ and open the template in the editor.
 			$all_skills=array();//All skills needed across all projects.
 			$filled_satisfied=array();//all skills that are satisfied in filled projects
 			$unfilled_satisfied=array();//all skills that are satisfied in filled projects
+			
 
+			 //assign the student to a new project
+			//$VIPfinal[6]->desiredStudents[264]=$unmatched[0];
+			//remove from unmatched
+			//unset($unmatched[0]);
+			//asort($unmatched);
+			//$unmatched = array_filter($unmatched);
+			
 			function find_skills($VIPfinal,$unmatched,$OtherP, $skill)
 			{
 				//unmatched students
@@ -759,6 +773,7 @@ and open the template in the editor.
 							{
 							
 								echo "<div class = 'pd3'>";
+								//echo "at index ".$i."<br>";
 								//echo $unmatched[$i]->id."<br>";
 								echo '<button type="button" id="b'.$i.'" class="regionalStud btn btn-lg btn-info " onclick="unMacthedStudFunction(this); toggleUnmacthedButtons('.$i.')">'.$unmatched[$i]->id." ".$unmatched[$i]->name.'</button></h5>';
 								
@@ -1344,6 +1359,7 @@ and open the template in the editor.
 			
 			echo '<div class ="pd">';
 			//echo 'Project ID: '.$VIPfinal[$i]->id.'</br>';
+			//echo "at index ".$i."<br>";
 			echo '<button type="button" id="s'.$i.'" class="regionalStud btn btn-lg btn-info" onclick="regionalStudFunction(this);toggleProjectButtons('.$i.')">'.$VIPfinal[$i]->id." ".$VIPfinal[$i]->name.'</button></h5>';
          
 			echo '';
@@ -1675,6 +1691,7 @@ and open the template in the editor.
 		if(count($VIPfinal[$i]->desiredStudents)==$VIPfinal[$i]->max){
             
 			echo "<div class='pd2'>";
+			//echo "at index ".$i."<br>";
 			//echo 'Project ID: '.$VIPfinal[$i]->id.'</br>';
 			echo '<button type="button" id="s'.$i.'" class="regionalStud btn btn-lg btn-info" onclick="regionalStudFunction(this);toggleProjectButtons('.$i.')">'.$VIPfinal[$i]->id." ".$VIPfinal[$i]->name.'</button></h5>';
 			echo '<div id="buttons'.$i.'"class= "this_button" ";>';
