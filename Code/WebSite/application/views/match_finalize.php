@@ -12,19 +12,19 @@ and open the template in the editor.
 	
         <meta charset="UTF-8">
         <title></title>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+	
+		<script src ="../js/jquery-1.9.1.js"></script>
+		<script src ="../js/jquery-ui.js"></script>
+		
 		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+
 
 		<script>
 		
-		//$(document).ready(function()
-		//{
-		//	$(".pd3").draggable();
-		//});			
 					
 		$(document).ready(function()
 		{
+				
 		 
 		/*$('#studentPop').click(function()
 				{
@@ -40,10 +40,9 @@ and open the template in the editor.
 		 
 		 
 		
-				//$("div.pd3").draggable();
 			
 
-			 $( "div.pd3" ).hover( 
+			 $( "div.pd3" ).hover(
 			function() {
 			$( this ).addClass( "sel" );
 			}, function() {
@@ -71,8 +70,8 @@ and open the template in the editor.
 				trigger: 'click',
 				html:true,  
 				content: function() {
-				return $(this).next(".uMs").html();
-				}
+    return $(this).next(".uMs").html();
+}
 			});
 			//popover 3 -skills in 
 				$('[data-toggle="unMatchedInterest"]').popover({
@@ -143,7 +142,7 @@ and open the template in the editor.
 			});
 			
 
-				//$("#draggable").draggable();
+			//	$("#draggable").draggable();
 			
 		});
 	
@@ -164,7 +163,7 @@ and open the template in the editor.
 			height: auto;
 			width:auto;
 			background-color: pink;
-			display: none;
+			display:none;
 		}
 		div.ss{
 			display: none;
@@ -286,13 +285,14 @@ and open the template in the editor.
         </style>
         <script>
 		
-		
-		function MyFunction()
+		function MyFunction(u)
 		{
 			alert("u clicked me");
 		}
 		
-	
+		$(function() {
+      $("#draggable").draggable();
+});
 		
 		function toggleUnmacthedButtons(num)
 		{
@@ -504,11 +504,7 @@ and open the template in the editor.
 			
 			echo "<div id = 'test'>";
 			echo "Test</br>";
-			
 	
-			//echo "<div id='draggable'>";
-		//	echo"</div>";
-			
 			$unUsed_skills = array();//An array to hold all the skills of the still unmatched students.
 			$assigned_skills = array();//An array to hold all the skills of the students already assigned.
 			$missing_unfilled = array();//An array to hold the missing skills in unfilled projects
@@ -520,15 +516,8 @@ and open the template in the editor.
 			$all_skills=array();//All skills needed across all projects.
 			$filled_satisfied=array();//all skills that are satisfied in filled projects
 			$unfilled_satisfied=array();//all skills that are satisfied in filled projects
-			
-
-			 //assign the student to a new project
-			//$VIPfinal[6]->desiredStudents[264]=$unmatched[0];
-			//remove from unmatched
-			//unset($unmatched[0]);
-			//asort($unmatched);
-			//$unmatched = array_filter($unmatched);
-			
+				
+		    
 			function find_skills($VIPfinal,$unmatched,$OtherP, $skill)
 			{
 				//unmatched students
@@ -621,7 +610,7 @@ and open the template in the editor.
 					}
 				}
 								
-					function find_project($skill, $VIPfinal)
+					 function find_project($skill, $VIPfinal)
 					{
 						for($i=0;$i<count($VIPfinal);$i++)
 						{
@@ -747,13 +736,8 @@ and open the template in the editor.
 					echo "nope!";
 				  }
 				  echo "<br><br>";
-				 foreach($VIPfinal[0]->desiredStudents as $s)
-				 {
-					echo"<pre>";
-					print_r($s->relevant);
-					echo"</pre>";
-				 }
-				  echo"</div>";		 		
+				
+		  
 		?>
 		
 </table><br>   
@@ -773,7 +757,6 @@ and open the template in the editor.
 							{
 							
 								echo "<div class = 'pd3'>";
-								//echo "at index ".$i."<br>";
 								//echo $unmatched[$i]->id."<br>";
 								echo '<button type="button" id="b'.$i.'" class="regionalStud btn btn-lg btn-info " onclick="unMacthedStudFunction(this); toggleUnmacthedButtons('.$i.')">'.$unmatched[$i]->id." ".$unmatched[$i]->name.'</button></h5>';
 								
@@ -828,7 +811,7 @@ and open the template in the editor.
 										if(in_array($key,$open_projects)){//if it is an open project
 												
 										echo '<li class="label label-success skill">';//it is green.
-										echo"<a href='javascript:MyFunction();' 'title='".$unmatched[$i]->projList[$key]->name."\nStudent Rank: ".$value."\nHead Professor Rating: ".$unmatched[$i]->projList[$key]->score."'>".$key."[".$value."]</a>";
+										echo"<a href='javascript:MyFunction();' title='".$unmatched[$i]->projList[$key]->name."\nStudent Rank: ".$value."\nHead Professor Rating: ".$unmatched[$i]->projList[$key]->score."'>".$key."[".$value."]</a>";
 										echo '</li>';
 										echo " ";
 										}
@@ -1349,17 +1332,15 @@ and open the template in the editor.
 		echo "<h5>". $unfilled." projects still need students</h5>";
 		}
 		
-        //$PLc = array_values($_SESSION['VIPs']);
+        
         
         for($i = 0; $i<count($VIPfinal); $i++){
 		
 		if(count($VIPfinal[$i]->desiredStudents)!=$VIPfinal[$i]->max){
-            /* echo '<tr>';
-            echo '<td>';*/
+           
 			
 			echo '<div class ="pd">';
-			//echo 'Project ID: '.$VIPfinal[$i]->id.'</br>';
-			//echo "at index ".$i."<br>";
+			
 			echo '<button type="button" id="s'.$i.'" class="regionalStud btn btn-lg btn-info" onclick="regionalStudFunction(this);toggleProjectButtons('.$i.')">'.$VIPfinal[$i]->id." ".$VIPfinal[$i]->name.'</button></h5>';
          
 			echo '';
@@ -1684,15 +1665,14 @@ and open the template in the editor.
 		
  
  
-        //$PLc = array_values($_SESSION['VIPs']);
+        
         
         for($i = 0; $i<count($VIPfinal); $i++){
 		
 		if(count($VIPfinal[$i]->desiredStudents)==$VIPfinal[$i]->max){
             
 			echo "<div class='pd2'>";
-			//echo "at index ".$i."<br>";
-			//echo 'Project ID: '.$VIPfinal[$i]->id.'</br>';
+			
 			echo '<button type="button" id="s'.$i.'" class="regionalStud btn btn-lg btn-info" onclick="regionalStudFunction(this);toggleProjectButtons('.$i.')">'.$VIPfinal[$i]->id." ".$VIPfinal[$i]->name.'</button></h5>';
 			echo '<div id="buttons'.$i.'"class= "this_button" ";>';
           
@@ -2083,45 +2063,6 @@ and open the template in the editor.
                 ?>
 				<?php echo form_close() ?>
 				 
-				
-				
-				
-           
-        <?php
-                echo form_submit(array(
-                    'id' => 'start over',
-                    'name' => 'start over',
-                    'type' => 'button',
-                    'class' => 'btn btn-primary btn-small pull-left Button',
-                    'value' => 'Start Over',
-                ));
-				
-                //echo "</br></br>"
-                ?>
-				<?php echo form_close() ?>
-				  <?php
-                echo form_submit(array(
-                    'id' => 'unmatch all',
-                    'name' => 'unmatch all',
-                    'type' => 'button',
-                    'class' => 'btn btn-primary btn-small pull-left Button',
-                    'value' => 'Unmatch All',
-                ));
-				
-                //echo "</br></br>"
-                ?>
-				<?php echo form_close() ?>
-					  <?php
-                echo form_submit(array(
-                    'id' => 'continue match',
-                    'name' => 'continue match',
-                    'type' => 'button',
-                    'class' => 'btn btn-primary btn-small pull-left Button',
-                    'value' => 'Continue Match',
-                ));
-			
-                ?>
-				<?php echo form_close() ?>
 			
 				</div>
 				

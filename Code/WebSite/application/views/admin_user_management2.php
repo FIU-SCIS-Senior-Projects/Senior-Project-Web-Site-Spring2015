@@ -312,12 +312,12 @@
 <button id="deleteRequests" type="button" class="btn btn-primary delBtn" disabled="disabled" style="background-color:gray;margin-left:1em">Delete</button>
 </div>
 <br></br>
-
+<!-- Email Template (needs development)
 <div class="well">
-<div id="accordion">
+	<div id="accordion">
 	<h3>Email Notification</h3>
 		<?php
-					
+		/*		
 		  $query_msg_notif = $this->db->query( 'SELECT intro FROM email_template WHERE id = "NOTIFICATION"' );
 		  foreach( $query_msg_notif->result_array( ) as $row )
 		  {
@@ -348,14 +348,7 @@
 									'title' => 'Notification' ) );
 		  echo( "</div>" );
 		  echo( "<div>" );
-		 // echo form_hidden( array( 'role' => 'STUDENT' ) );
-		  /*echo form_submit( array(
-								  'id' => 'email-btn',
-								  'name' => 'email btn',
-								  'class' => 'btn emailBtn',
-								  'value' => 'Send email' , 
-								  'disabled' => true,
-								  'style' => 'background-color:gray') );*/
+		 
 		  echo("<button id=\"email-btn\" name=\"email btn\" class=\"btn emailBtn\" disabled=\"disabled\" style=\"background-color:gray\">Send Email</button>");
 		  echo( "</div>" );
 		  //echo form_close( );
@@ -365,12 +358,12 @@
 		  //$email = $_POST['email'];
 		  
 		  //mail($email, "Dear ".$fname." ".$lname, "THANKS!");
-		  
+		  */
 		?>
-		</p></div>
+		</p></div> 
+	</div>
 </div>
-</div>
-
+-->
 <script type="text/javascript">
 //Local variables to check for form change in the table
 var hasChange = false;
@@ -558,7 +551,6 @@ function uploadUser(machineList){
 }
 
 $('.actBtn').click(function(){
-	console.log("Clicked Activate Button!");
 	confirmMsg = 'You are about to activate checked users.\nIf you continue and there are unsaved changes unchecked, you will lose those changes.';
 	console.log("Clicked activate");
 	if(window.confirm(confirmMsg)){
@@ -580,7 +572,6 @@ $('.actBtn').click(function(){
 });
 
 $('.deactBtn').click(function(){
-	console.log("Clicked Deactivate Button!");
 	confirmMsg = 'You are about to deactivate checked users.\nIf you continue and there are unsaved changes unchecked, you will lose those changes.';
 	console.log("Clicked deactivate");
 	if(window.confirm(confirmMsg)){
@@ -604,7 +595,7 @@ $('.deactBtn').click(function(){
 $('.delBtn').click(function(){
 	//alert("Delete button clicked! \n\n Work still in progress!");
 	confirmMsg = 'You are about to delete checked users.\nIf you continue and there are unsaved changes unchecked, you will lose those changes.';
-	confirmMsg += '\n\n Are you sure you want to delete users?';
+	confirmMsg += '\n\nAre you sure you want to delete users?';
 	console.log("Clicked delete");
 	if(window.confirm(confirmMsg)){
 		$('.checkbox').each(function() {
@@ -667,7 +658,7 @@ function deleteRequests(machineList){
 	});	
 	location.reload();
 }
-
+/* Used for email template (needs to check Ajax)
 $(document).ready(function() {
 	$('.emailBtn').on('click', function() {
 		alert("Email button clicked!");
@@ -705,13 +696,16 @@ $(document).ready(function() {
 		});	
 	});
 });
-
+*/
+//Warn user before leaving if there are changes
 $(window).bind("beforeunload", function (e) {
 	var confirmMsg = 'You have unsaved changes \nIf you leave before saving, you will lose changes made.';
 	if(!(clickedUserSave)){
 		if(hasChange){
-			window.confirm = confirmMsg;
-			return confirmMsg;
+			//window.confirm = confirmMsg;
+			//return confirmMsg;
+			(e || window.event).returnValue = confirmMsg; //Gecko + IE
+			return confirmMsg; //Gecko + Webkit, Safari, Chrome etc.
 		}else{
 			return undefined;
 		}
